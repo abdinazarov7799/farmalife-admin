@@ -18,14 +18,11 @@ import NotFoundPage from  "../modules/auth/pages/NotFoundPage";
 
 // PAGES
 import OverlayLoader from "../components/OverlayLoader.jsx";
-import ProductsPage from "../modules/products/pages/ProductsPage.jsx";
 import UsersPage from "../modules/users/pages/UsersPage.jsx";
 import AdminsPage from "../modules/admins/pages/AdminsPage.jsx";
-import OrdersPage from "../modules/orders/pages/OrdersPage.jsx";
 import PharmaciesPage from "../modules/pharmacies/pages/PharmaciesPage.jsx";
 import TranslationPage from "../modules/translations/pages/TranslationPage.jsx";
 import ConstantsPage from "../modules/constants/pages/ConstantsPage.jsx";
-import TransactionPage from "../modules/transactions/pages/TransactionPage.jsx";
 // PAGES
 
 
@@ -37,10 +34,6 @@ const Router = () => {
           <Routes>
             <Route path={"/"} element={<DashboardLayout />}>
               <Route
-                  path={"/products"}
-                  element={<ProductsPage />}
-              />
-              <Route
                   path={"/users"}
                   element={<UsersPage />}
               />
@@ -49,20 +42,12 @@ const Router = () => {
                   element={<AdminsPage />}
               />
               <Route
-                  path={"/orders"}
-                  element={<OrdersPage />}
-              />
-              <Route
                   path={"/pharmacies"}
                   element={<PharmaciesPage />}
               />
               <Route
                   path={"/translations"}
                   element={<TranslationPage />}
-              />
-              <Route
-                  path={"/transactions"}
-                  element={<TransactionPage />}
               />
               <Route
                   path={"/constants"}
