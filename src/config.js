@@ -1,5 +1,5 @@
 const config = {
-  API_ROOT: 'https://farmalife.mediasolutions.uz/',
+  API_ROOT: 'https://farmalife.mediasolutions.uz',
   DEFAULT_APP_LANG: "UZ",
   ROLES: {
     ROLE_SUPER_ADMIN: "ROLE_SUPER_ADMIN",

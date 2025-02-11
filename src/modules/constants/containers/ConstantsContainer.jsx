@@ -12,12 +12,17 @@ import {EditOutlined} from "@ant-design/icons";
 const ConstantsContainer = () => {
     const {t} = useTranslation();
     const [isModalOpen,setIsModalOpen] = useState(false);
-    let constants = []
+
     const {data,isLoading,refetch} = useGetAllQuery({
         key: KEYS.constants_list,
         url: URLS.constants_list,
     })
     const columns = [
+        {
+            title: t("Id"),
+            dataIndex: "id",
+            key: "id",
+        },
         {
             title: t("Key"),
             dataIndex: "key",
@@ -27,11 +32,14 @@ const ConstantsContainer = () => {
             title: t("Value"),
             dataIndex: "value",
             key: "value",
-        }
+        },
+        {
+            title: t("Comment"),
+            dataIndex: "comment",
+            key: "comment",
+        },
     ]
-    for (const [key, value] of Object.entries(get(data,'data',{}))) {
-        !isEqual(key, 'id') && constants.push({key, value})
-    }
+
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
@@ -46,7 +54,7 @@ const ConstantsContainer = () => {
                 </Row>
                 <Table
                     columns={columns}
-                    dataSource={constants}
+                    dataSource={get(data,'data',[])}
                     bordered
                     size={"middle"}
                     pagination={false}
@@ -59,7 +67,7 @@ const ConstantsContainer = () => {
                 onCancel={() => setIsModalOpen(false)}
                 footer={null}
             >
-                <EditConstants setIsModalOpen={setIsModalOpen} refetch={refetch} data={constants} />
+                <EditConstants setIsModalOpen={setIsModalOpen} refetch={refetch} data={get(data,'data',[])} />
             </Modal>
         </Container>
     );

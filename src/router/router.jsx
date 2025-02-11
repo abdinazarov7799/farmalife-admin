@@ -55,11 +55,11 @@ const Router = () => {
               />
               <Route
                   path={"auth/*"}
-                  element={<Navigate to={"/orders"} replace />}
+                  element={<Navigate to={"/users"} replace />}
               />
               <Route
                   path={"/"}
-                  element={<Navigate to={"/orders"} replace />}
+                  element={<Navigate to={"/users"} replace />}
               />
               <Route path={"*"} element={<NotFoundPage />} />
             </Route>

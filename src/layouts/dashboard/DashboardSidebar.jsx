@@ -15,21 +15,6 @@ const DashboardSidebar = () => {
     const user = useStore(state => get(state,'user',{}))
     const items = [
         {
-            label: t("Transactions"),
-            key: "/transactions",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN],
-        },
-        {
-            label: t("Orders"),
-            key: "/orders",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ORDER_MANAGER],
-        },
-        {
-            label: t("Products"),
-            key: "/products",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
-        },
-        {
             label: t("Pharmacies"),
             key: "/pharmacies",
             access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
