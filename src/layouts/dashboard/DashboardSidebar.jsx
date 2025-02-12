@@ -15,6 +15,31 @@ const DashboardSidebar = () => {
     const user = useStore(state => get(state,'user',{}))
     const items = [
         {
+            label: t("Regions"),
+            key: "/regions",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+        },
+        {
+            label: t("Districts"),
+            key: "/districts",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+        },
+        {
+            label: t("Medicines"),
+            key: "/medicines",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+        },
+        {
+            label: t("Visits"),
+            key: "/visits",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+        },
+        {
+            label: t("Med institutions"),
+            key: "/med-institutions",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+        },
+        {
             label: t("Pharmacies"),
             key: "/pharmacies",
             access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],

@@ -33,34 +33,18 @@ const Router = () => {
         <IsAuth>
           <Routes>
             <Route path={"/"} element={<DashboardLayout />}>
-              <Route
-                  path={"/users"}
-                  element={<UsersPage />}
-              />
-              <Route
-                  path={"/admins"}
-                  element={<AdminsPage />}
-              />
-              <Route
-                  path={"/pharmacies"}
-                  element={<PharmaciesPage />}
-              />
-              <Route
-                  path={"/translations"}
-                  element={<TranslationPage />}
-              />
-              <Route
-                  path={"/constants"}
-                  element={<ConstantsPage />}
-              />
-              <Route
-                  path={"auth/*"}
-                  element={<Navigate to={"/users"} replace />}
-              />
-              <Route
-                  path={"/"}
-                  element={<Navigate to={"/users"} replace />}
-              />
+              <Route path={"/regions"} element={<UsersPage />}/>
+              <Route path={"/districts"} element={<UsersPage />}/>
+              <Route path={"/medicines"} element={<UsersPage />}/>
+              <Route path={"/visits"} element={<UsersPage />}/>
+              <Route path={"/users"} element={<UsersPage />}/>
+              <Route path={"/med-institutions"} element={<UsersPage />}/>
+              <Route path={"/admins"} element={<AdminsPage />}/>
+              <Route path={"/pharmacies"} element={<PharmaciesPage />}/>
+              <Route path={"/translations"} element={<TranslationPage />}/>
+              <Route path={"/constants"} element={<ConstantsPage />}/>
+              <Route path={"auth/*"} element={<Navigate to={"/users"} replace />}/>
+              <Route path={"/"} element={<Navigate to={"/users"} replace />}/>
               <Route path={"*"} element={<NotFoundPage />} />
             </Route>
           </Routes>
