@@ -23,6 +23,11 @@ import AdminsPage from "../modules/admins/pages/AdminsPage.jsx";
 import PharmaciesPage from "../modules/pharmacies/pages/PharmaciesPage.jsx";
 import TranslationPage from "../modules/translations/pages/TranslationPage.jsx";
 import ConstantsPage from "../modules/constants/pages/ConstantsPage.jsx";
+import RegionsPage from "../modules/regions/pages/RegionsPage.jsx";
+import DistrictsPage from "../modules/districts/pages/DistrictsPage.jsx";
+import MedicinesPage from "../modules/medicines/pages/MedicinesPage.jsx";
+import VisitsPage from "../modules/visits/pages/VisitsPage.jsx";
+import MedInstitutionsPage from "../modules/med-institutions/pages/MedInstitutionsPage.jsx";
 // PAGES
 
 
@@ -33,12 +38,12 @@ const Router = () => {
         <IsAuth>
           <Routes>
             <Route path={"/"} element={<DashboardLayout />}>
-              <Route path={"/regions"} element={<UsersPage />}/>
-              <Route path={"/districts"} element={<UsersPage />}/>
-              <Route path={"/medicines"} element={<UsersPage />}/>
-              <Route path={"/visits"} element={<UsersPage />}/>
+              <Route path={"/regions"} element={<RegionsPage />}/>
+              <Route path={"/districts"} element={<DistrictsPage />}/>
+              <Route path={"/medicines"} element={<MedicinesPage />}/>
+              <Route path={"/visits"} element={<VisitsPage />}/>
               <Route path={"/users"} element={<UsersPage />}/>
-              <Route path={"/med-institutions"} element={<UsersPage />}/>
+              <Route path={"/med-institutions"} element={<MedInstitutionsPage />}/>
               <Route path={"/admins"} element={<AdminsPage />}/>
               <Route path={"/pharmacies"} element={<PharmaciesPage />}/>
               <Route path={"/translations"} element={<TranslationPage />}/>

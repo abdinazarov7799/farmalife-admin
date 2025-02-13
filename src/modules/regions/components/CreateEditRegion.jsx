@@ -8,48 +8,40 @@ import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 import {get} from "lodash";
 import usePutQuery from "../../../hooks/api/usePatchQuery.js";
 
-const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
+const CreateEditProduct = ({itemData,setIsModalOpen}) => {
     const { t } = useTranslation();
     const [form] = Form.useForm();
 
     const { mutate, isLoading } = usePostQuery({
-        listKeyId: KEYS.admins_list,
+        listKeyId: KEYS.region_list,
     });
     const { mutate:mutateEdit, isLoading:isLoadingEdit } = usePutQuery({
-        listKeyId: KEYS.admins_list,
-        hideSuccessToast: false
+        listKeyId: KEYS.region_list,
     });
 
-    const { data:roles,isLoading:isLoadingRoles } = useGetAllQuery({
-        key: KEYS.role_list,
-        url: URLS.role_list,
-    })
     useEffect(() => {
         form.setFieldsValue({
-            role: get(itemData,'role'),
-            username: get(itemData,'username'),
-            password: get(itemData,'password'),
+            nameUz: get(itemData,'nameUz'),
+            nameRu: get(itemData,'nameRu'),
         });
     }, [itemData]);
 
     const onFinish = (values) => {
         if (itemData){
             mutateEdit(
-                { url: `${URLS.admin_edit}/${get(itemData,'id')}`, attributes: values },
+                { url: `${URLS.region_edit}/${get(itemData,'id')}`, attributes: values },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
-                        refetch()
                     },
                 }
             );
         }else {
             mutate(
-                { url: URLS.admin_add, attributes: values },
+                { url: URLS.region_add, attributes: values },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
-                        refetch()
                     },
                 }
             );
@@ -65,36 +57,21 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
                 form={form}
             >
                 <Form.Item
-                    label={t("Username")}
-                    name="username"
+                    label={t("Name uz")}
+                    name="nameUz"
                     rules={[{required: true,}]}
                 >
                     <Input />
                 </Form.Item>
 
                 <Form.Item
-                    label={t("Password")}
-                    name="password"
+                    label={t("Name ru")}
+                    name="nameRu"
                     rules={[{required: true,}]}
                 >
-                    <Input.Password />
+                    <Input />
                 </Form.Item>
 
-                <Form.Item
-                    label={t("Role")}
-                    name="role"
-                    rules={[{required: true,}]}>
-                    <Select
-                        placeholder={t("Role")}
-                        loading={isLoadingRoles}
-                        options={get(roles,'data',[])?.map((item) => {
-                            return {
-                                value: item,
-                                label: item
-                            }
-                        })}
-                    />
-                </Form.Item>
                 <Form.Item>
                     <Button block type="primary" htmlType="submit" loading={isLoading || isLoadingEdit}>
                         {itemData ? t("Edit") : t("Create")}

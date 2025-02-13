@@ -7,14 +7,14 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 
-const VisitsContainer = () => {
+const MedInstitutionsContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
     const [searchKey,setSearchKey] = useState();
 
     const {data,isLoading} = usePaginateQuery({
-        key: KEYS.visit_list,
-        url: URLS.visit_list,
+        key: KEYS.med_institutions_list,
+        url: URLS.med_institutions_list,
         params: {
             params: {
                 size: 10,
@@ -31,39 +31,24 @@ const VisitsContainer = () => {
             key: "id",
         },
         {
-            title: t("FIO"),
-            dataIndex: "fio",
-            key: "fio"
+            title: t("Name"),
+            dataIndex: "name",
+            key: "name"
         },
         {
-            title: t("Phone"),
-            dataIndex: "phone",
-            key: "phone"
+            title: t("Status"),
+            dataIndex: "status",
+            key: "status"
         },
         {
-            title: t("Place of work"),
-            dataIndex: "placeOfWork",
-            key: "placeOfWork"
+            title: t("District name"),
+            dataIndex: "districtName",
+            key: "districtName"
         },
         {
-            title: t("Specialization"),
-            dataIndex: "specialization",
-            key: "specialization"
-        },
-        {
-            title: t("Med institution"),
-            dataIndex: "medInstitutionName",
-            key: "medInstitutionName"
-        },
-        {
-            title: t("Visited by"),
-            dataIndex: "visitedBy",
-            key: "visitedBy"
-        },
-        {
-            title: t("Position"),
-            dataIndex: "position",
-            key: "position"
+            title: t("Created by"),
+            dataIndex: "createdBy",
+            key: "createdBy"
         },
         {
             title: t("Created at"),
@@ -104,4 +89,4 @@ const VisitsContainer = () => {
     );
 };
 
-export default VisitsContainer;
+export default MedInstitutionsContainer;

@@ -8,7 +8,7 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
-import CreateEditAdmin from "../components/CreateEditAdmin.jsx";
+import CreateEditMedicines from "../components/CreateEditMedicines.jsx";
 
 const MedicinesContainer = () => {
     const {t} = useTranslation();
@@ -19,8 +19,8 @@ const MedicinesContainer = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
     const {data,isLoading} = usePaginateQuery({
-        key: KEYS.admins_list,
-        url: URLS.admins_list,
+        key: KEYS.drug_list,
+        url: URLS.drug_list,
         params: {
             params: {
                 size: 10,
@@ -31,10 +31,10 @@ const MedicinesContainer = () => {
     });
 
     const { mutate } = useDeleteQuery({
-        listKeyId: KEYS.admins_list
+        listKeyId: KEYS.drug_list
     });
     const useDelete = (id) => {
-        mutate({url: `${URLS.admin_delete}/${id}`})
+        mutate({url: `${URLS.drug_delete}/${id}`})
     }
 
     const columns = [
@@ -44,14 +44,21 @@ const MedicinesContainer = () => {
             key: "id",
         },
         {
-            title: t("Role"),
-            dataIndex: "role",
-            key: "role"
+            title: t("Name uz"),
+            dataIndex: "nameUz",
+            key: "nameUz"
         },
         {
-            title: t("Username"),
-            dataIndex: "username",
-            key: "username",
+            title: t("Name ru"),
+            dataIndex: "nameRu",
+            key: "nameRu"
+        },
+        {
+            title: t("Image"),
+            key: "imageUrl",
+            dataIndex: "imageUrl",
+            align: "center",
+            render: (props) => <Image src={props} width={80} height={50} />
         },
         {
             title: t("Edit / Delete"),
@@ -94,20 +101,20 @@ const MedicinesContainer = () => {
                         {t("New")}
                     </Button>
                     <Modal
-                        title={t('Create new admin')}
+                        title={t('Create')}
                         open={isCreateModalOpenCreate}
                         onCancel={() => setIsCreateModalOpen(false)}
                         footer={null}
                     >
-                        <CreateEditAdmin setIsModalOpen={setIsCreateModalOpen}/>
+                        <CreateEditMedicines setIsModalOpen={setIsCreateModalOpen}/>
                     </Modal>
                     <Modal
-                        title={t("Edit admin")}
+                        title={t("Edit")}
                         open={isEditModalOpen}
                         onCancel={() => setIsEditModalOpen(false)}
                         footer={null}
                     >
-                        <CreateEditAdmin
+                        <CreateEditMedicines
                             itemData={itemData}
                             setIsModalOpen={setIsEditModalOpen}
                         />

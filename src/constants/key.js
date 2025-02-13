@@ -9,4 +9,6 @@ export const KEYS = {
     region_list: "region_list",
     drug_list: "drug_list",
     district_list: "district_list",
+    visit_list: "visit_list",
+    med_institutions_list: "med_institutions_list"
 };

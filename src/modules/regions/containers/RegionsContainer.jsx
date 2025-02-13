@@ -8,7 +8,7 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
-import CreateEditAdmin from "../components/CreateEditAdmin.jsx";
+import CreateEditRegion from "../components/CreateEditRegion.jsx";
 
 const RegionsContainer = () => {
     const {t} = useTranslation();
@@ -19,8 +19,8 @@ const RegionsContainer = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
     const {data,isLoading} = usePaginateQuery({
-        key: KEYS.admins_list,
-        url: URLS.admins_list,
+        key: KEYS.region_list,
+        url: URLS.region_list,
         params: {
             params: {
                 size: 10,
@@ -31,10 +31,10 @@ const RegionsContainer = () => {
     });
 
     const { mutate } = useDeleteQuery({
-        listKeyId: KEYS.admins_list
+        listKeyId: KEYS.region_list
     });
     const useDelete = (id) => {
-        mutate({url: `${URLS.admin_delete}/${id}`})
+        mutate({url: `${URLS.region_delete}/${id}`})
     }
 
     const columns = [
@@ -44,14 +44,14 @@ const RegionsContainer = () => {
             key: "id",
         },
         {
-            title: t("Role"),
-            dataIndex: "role",
-            key: "role"
+            title: t("Name uz"),
+            dataIndex: "nameUz",
+            key: "nameUz"
         },
         {
-            title: t("Username"),
-            dataIndex: "username",
-            key: "username",
+            title: t("Name ru"),
+            dataIndex: "nameRu",
+            key: "nameRu"
         },
         {
             title: t("Edit / Delete"),
@@ -94,20 +94,20 @@ const RegionsContainer = () => {
                         {t("New")}
                     </Button>
                     <Modal
-                        title={t('Create new admin')}
+                        title={t('Create')}
                         open={isCreateModalOpenCreate}
                         onCancel={() => setIsCreateModalOpen(false)}
                         footer={null}
                     >
-                        <CreateEditAdmin setIsModalOpen={setIsCreateModalOpen}/>
+                        <CreateEditRegion setIsModalOpen={setIsCreateModalOpen}/>
                     </Modal>
                     <Modal
-                        title={t("Edit admin")}
+                        title={t("Edit")}
                         open={isEditModalOpen}
                         onCancel={() => setIsEditModalOpen(false)}
                         footer={null}
                     >
-                        <CreateEditAdmin
+                        <CreateEditRegion
                             itemData={itemData}
                             setIsModalOpen={setIsEditModalOpen}
                         />

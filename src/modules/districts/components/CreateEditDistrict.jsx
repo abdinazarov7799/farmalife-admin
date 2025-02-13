@@ -13,29 +13,34 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
     const [form] = Form.useForm();
 
     const { mutate, isLoading } = usePostQuery({
-        listKeyId: KEYS.admins_list,
+        listKeyId: KEYS.district_list,
     });
     const { mutate:mutateEdit, isLoading:isLoadingEdit } = usePutQuery({
-        listKeyId: KEYS.admins_list,
+        listKeyId: KEYS.district_list,
         hideSuccessToast: false
     });
 
-    const { data:roles,isLoading:isLoadingRoles } = useGetAllQuery({
-        key: KEYS.role_list,
-        url: URLS.role_list,
+    const { data:regions,isLoading:isLoadingRegions } = useGetAllQuery({
+        key: KEYS.region_list,
+        url: URLS.region_list,
+        params: {
+            params: {
+                size: 50
+            }
+        }
     })
     useEffect(() => {
         form.setFieldsValue({
-            role: get(itemData,'role'),
-            username: get(itemData,'username'),
-            password: get(itemData,'password'),
+            regionId: get(itemData,'regionId'),
+            nameUz: get(itemData,'nameUz'),
+            nameRu: get(itemData,'nameRu'),
         });
     }, [itemData]);
 
     const onFinish = (values) => {
         if (itemData){
             mutateEdit(
-                { url: `${URLS.admin_edit}/${get(itemData,'id')}`, attributes: values },
+                { url: `${URLS.district_edit}/${get(itemData,'id')}`, attributes: values },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -45,7 +50,7 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
             );
         }else {
             mutate(
-                { url: URLS.admin_add, attributes: values },
+                { url: URLS.district_add, attributes: values },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -65,32 +70,32 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
                 form={form}
             >
                 <Form.Item
-                    label={t("Username")}
-                    name="username"
+                    label={t("Name uz")}
+                    name="nameUz"
                     rules={[{required: true,}]}
                 >
                     <Input />
                 </Form.Item>
 
                 <Form.Item
-                    label={t("Password")}
-                    name="password"
+                    label={t("Name ru")}
+                    name="nameRu"
                     rules={[{required: true,}]}
                 >
-                    <Input.Password />
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
-                    label={t("Role")}
-                    name="role"
+                    label={t("Region")}
+                    name="regionId"
                     rules={[{required: true,}]}>
                     <Select
-                        placeholder={t("Role")}
-                        loading={isLoadingRoles}
-                        options={get(roles,'data',[])?.map((item) => {
+                        placeholder={t("Region")}
+                        loading={isLoadingRegions}
+                        options={get(regions,'data',[])?.map((item) => {
                             return {
-                                value: item,
-                                label: item
+                                value: get(item,'id'),
+                                label: `${get(item,'nameUz')} / ${get(item,'nameRu')}`
                             }
                         })}
                     />

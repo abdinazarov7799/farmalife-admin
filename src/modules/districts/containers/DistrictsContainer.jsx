@@ -8,7 +8,7 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
-import CreateEditAdmin from "../components/CreateEditAdmin.jsx";
+import CreateEditDistrict from "../components/CreateEditDistrict.jsx";
 
 const DistrictsContainer = () => {
     const {t} = useTranslation();
@@ -16,11 +16,11 @@ const DistrictsContainer = () => {
     const [searchKey,setSearchKey] = useState();
     const [itemData, setItemData] = useState(null);
     const [isCreateModalOpenCreate, setIsCreateModalOpen] = useState(false)
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const {data,isLoading} = usePaginateQuery({
-        key: KEYS.admins_list,
-        url: URLS.admins_list,
+        key: KEYS.district_list,
+        url: URLS.district_list,
         params: {
             params: {
                 size: 10,
@@ -31,10 +31,10 @@ const DistrictsContainer = () => {
     });
 
     const { mutate } = useDeleteQuery({
-        listKeyId: KEYS.admins_list
+        listKeyId: KEYS.district_list
     });
     const useDelete = (id) => {
-        mutate({url: `${URLS.admin_delete}/${id}`})
+        mutate({url: `${URLS.district_delete}/${id}`})
     }
 
     const columns = [
@@ -44,14 +44,14 @@ const DistrictsContainer = () => {
             key: "id",
         },
         {
-            title: t("Role"),
-            dataIndex: "role",
-            key: "role"
+            title: t("Name uz"),
+            dataIndex: "nameUz",
+            key: "nameUz"
         },
         {
-            title: t("Username"),
-            dataIndex: "username",
-            key: "username",
+            title: t("Name ru"),
+            dataIndex: "nameRu",
+            key: "nameRu"
         },
         {
             title: t("Edit / Delete"),
@@ -94,20 +94,20 @@ const DistrictsContainer = () => {
                         {t("New")}
                     </Button>
                     <Modal
-                        title={t('Create new admin')}
+                        title={t('Create')}
                         open={isCreateModalOpenCreate}
                         onCancel={() => setIsCreateModalOpen(false)}
                         footer={null}
                     >
-                        <CreateEditAdmin setIsModalOpen={setIsCreateModalOpen}/>
+                        <CreateEditDistrict setIsModalOpen={setIsCreateModalOpen}/>
                     </Modal>
                     <Modal
-                        title={t("Edit admin")}
+                        title={t("Edit")}
                         open={isEditModalOpen}
                         onCancel={() => setIsEditModalOpen(false)}
                         footer={null}
                     >
-                        <CreateEditAdmin
+                        <CreateEditDistrict
                             itemData={itemData}
                             setIsModalOpen={setIsEditModalOpen}
                         />
