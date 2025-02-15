@@ -92,7 +92,7 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
                     <Select
                         placeholder={t("Region")}
                         loading={isLoadingRegions}
-                        options={get(regions,'data',[])?.map((item) => {
+                        options={get(regions,'data.content',[])?.map((item) => {
                             return {
                                 value: get(item,'id'),
                                 label: `${get(item,'nameUz')} / ${get(item,'nameRu')}`
