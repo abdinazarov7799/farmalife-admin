@@ -35,6 +35,16 @@ const DashboardSidebar = () => {
             access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
         },
         {
+            label: t("Stocks"),
+            key: "/stocks",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+        },
+        {
+            label: t("Doctors"),
+            key: "/doctors",
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+        },
+        {
             label: t("Med institutions"),
             key: "/med-institutions",
             access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],

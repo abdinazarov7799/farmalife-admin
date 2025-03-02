@@ -28,6 +28,8 @@ import DistrictsPage from "../modules/districts/pages/DistrictsPage.jsx";
 import MedicinesPage from "../modules/medicines/pages/MedicinesPage.jsx";
 import VisitsPage from "../modules/visits/pages/VisitsPage.jsx";
 import MedInstitutionsPage from "../modules/med-institutions/pages/MedInstitutionsPage.jsx";
+import StocksPage from "../modules/stocks/pages/StocksPage.jsx";
+import DoctorsPage from "../modules/doctors/pages/DoctorsPage.jsx";
 // PAGES
 
 
@@ -42,6 +44,8 @@ const Router = () => {
               <Route path={"/districts"} element={<DistrictsPage />}/>
               <Route path={"/medicines"} element={<MedicinesPage />}/>
               <Route path={"/visits"} element={<VisitsPage />}/>
+              <Route path={"/stocks"} element={<StocksPage />}/>
+              <Route path={"/doctors"} element={<DoctorsPage />}/>
               <Route path={"/users"} element={<UsersPage />}/>
               <Route path={"/med-institutions"} element={<MedInstitutionsPage />}/>
               <Route path={"/admins"} element={<AdminsPage />}/>

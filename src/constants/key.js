@@ -10,5 +10,8 @@ export const KEYS = {
     drug_list: "drug_list",
     district_list: "district_list",
     visit_list: "visit_list",
-    med_institutions_list: "med_institutions_list"
+    med_institutions_list: "med_institutions_list",
+    doctors_list: "doctors_list",
+    stocks_list: "stocks_list",
+    stock_details: "stock_details"
 };

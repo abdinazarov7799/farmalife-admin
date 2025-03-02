@@ -31,4 +31,7 @@ export const URLS = {
     visit_list: '/api/admin/visits',
     med_institutions_list: '/api/admin/med-institutions',
     med_institutions_edit: '/api/admin/med-institutions/edit-status',
+    doctors_list: '/api/admin/doctors/',
+    stocks_list: '/api/admin/stocks/get',
+    stock_details: '/api/admin/stocks/get-details',
 };
