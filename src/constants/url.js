@@ -30,4 +30,5 @@ export const URLS = {
     district_delete: '/api/admin/districts/delete',
     visit_list: '/api/admin/visits',
     med_institutions_list: '/api/admin/med-institutions',
+    med_institutions_edit: '/api/admin/med-institutions/edit-status',
 };

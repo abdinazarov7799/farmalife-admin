@@ -9,6 +9,7 @@ import {URLS} from "../../../constants/url.js";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 import CreateEditMedicines from "../components/CreateEditMedicines.jsx";
+import dayjs from "dayjs";
 
 const MedicinesContainer = () => {
     const {t} = useTranslation();
@@ -52,6 +53,17 @@ const MedicinesContainer = () => {
             title: t("Name ru"),
             dataIndex: "nameRu",
             key: "nameRu"
+        },
+        {
+            title: t("Created by"),
+            dataIndex: "createdBy",
+            key: "createdBy"
+        },
+        {
+            title: t("Created at"),
+            key: "createdAt",
+            dataIndex: "createdAt",
+            render: (props) => !!props ? dayjs(props).format("YYYY-MM-DD HH:mm:ss") : "",
         },
         {
             title: t("Image"),

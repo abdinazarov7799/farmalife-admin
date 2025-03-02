@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Input, Pagination, Row, Space, Table} from "antd";
+import {Button, Image, Input, Pagination, Popconfirm, Row, Space, Table} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
+import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
+import {CheckOutlined, CloseOutlined, EyeOutlined} from "@ant-design/icons";
 
 const MedInstitutionsContainer = () => {
     const {t} = useTranslation();
@@ -23,6 +25,14 @@ const MedInstitutionsContainer = () => {
         },
         page
     });
+
+    const {mutate:accept} = usePatchQuery({
+        listKeyId: KEYS.med_institutions_list,
+    })
+
+    const useAccept = (id,isAccept) => {
+        accept({url: `${URLS.med_institutions_edit}/${id}?accept=${isAccept}`})
+    }
 
     const columns = [
         {
@@ -55,6 +65,57 @@ const MedInstitutionsContainer = () => {
             dataIndex: "createdAt",
             key: "createdAt",
         },
+        {
+            title: t("Image"),
+            key: "photoUrl",
+            dataIndex: "photoUrl",
+            align: "center",
+            render: (props) => <Image src={props} width={80} height={50} />
+        },
+        {
+            title: t("Location"),
+            key: "location",
+            align: "center",
+            render: (props) => {
+                const openMap = () => {
+                    if (props?.lat && props?.lng) {
+                        const url = `https://www.google.com/maps?q=${props.lat},${props.lng}`;
+                        window.open(url, "_blank");
+                    } else {
+                        console.warn("Location data is missing");
+                    }
+                };
+                return <Button onClick={openMap} icon={<EyeOutlined/>} />
+            }
+        },
+        {
+            title: t("Reject / Accept"),
+            width: 90,
+            fixed: 'right',
+            key: 'action',
+            render: (props, data) => (
+                <Space>
+                    <Popconfirm
+                        title={t("Reject")}
+                        description={t("Are you sure to reject?")}
+                        onConfirm={() => useAccept(get(data,'id'),false)}
+                        okText={t("Yes")}
+                        cancelText={t("No")}
+                    >
+                        <Button danger icon={<CloseOutlined />}/>
+                    </Popconfirm>
+                    <Popconfirm
+                        title={t("Accept")}
+                        description={t("Are you sure to accept?")}
+                        onConfirm={() => useAccept(get(data,'id'),true)}
+                        okText={t("Yes")}
+                        cancelText={t("No")}
+                    >
+                        <Button type={"primary"} icon={<CheckOutlined />}/>
+                    </Popconfirm>
+                </Space>
+            )
+        }
     ]
     return (
         <Container>

@@ -4,11 +4,12 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Pagination, Popconfirm, Row, Space, Table, Upload} from "antd";
+import {Button, Image, Input, Pagination, Popconfirm, Row, Space, Table, Upload} from "antd";
 import {get} from "lodash";
-import {DeleteOutlined, UploadOutlined} from "@ant-design/icons";
+import {CheckOutlined, CloseOutlined, DeleteOutlined, EyeOutlined, UploadOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 import usePostQuery from "../../../hooks/api/usePostQuery.js";
+import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 
 const PharmaciesContainer = () => {
     const {t} = useTranslation();
@@ -25,13 +26,13 @@ const PharmaciesContainer = () => {
         },
         page
     });
-    const { mutate:fileUpload } = usePostQuery({});
 
-    const { mutate } = useDeleteQuery({
-        listKeyId: KEYS.pharmacies_list
-    });
-    const useDelete = (id) => {
-        mutate({url: `${URLS.pharmacies_delete}/${id}`})
+    const {mutate:accept} = usePatchQuery({
+        listKeyId: KEYS.pharmacies_list,
+    })
+
+    const useAccept = (id,isAccept) => {
+        accept({url: `${URLS.pharmacies_edit_status}/${id}?accept=${isAccept}`})
     }
 
     const columns = [
@@ -46,55 +47,83 @@ const PharmaciesContainer = () => {
             key: "name"
         },
         {
-            title: t("Region"),
-            dataIndex: "region",
-            key: "region"
+            title: t("INN"),
+            dataIndex: "inn",
+            key: "inn"
         },
         {
-            title: t("Address"),
-            dataIndex: "address",
-            key: "address"
+            title: t("Status"),
+            dataIndex: "status",
+            key: "status"
         },
         {
             title: t("District"),
-            dataIndex: "district",
-            key: "district"
+            dataIndex: "districtName",
+            key: "districtName"
         },
         {
-            title: t("Delete"),
-            width: 120,
+            title: t("Created by"),
+            dataIndex: "createdBy",
+            key: "createdBy"
+        },
+        {
+            title: t("Created at"),
+            dataIndex: "createdAt",
+            key: "createdAt",
+        },
+        {
+            title: t("Image"),
+            key: "photoUrl",
+            dataIndex: "photoUrl",
+            align: "center",
+            render: (props) => <Image src={props} width={80} height={50} />
+        },
+        {
+            title: t("Location"),
+            key: "location",
+            align: "center",
+            render: (props) => {
+                const openMap = () => {
+                    if (props?.lat && props?.lng) {
+                        const url = `https://www.google.com/maps?q=${props.lat},${props.lng}`;
+                        window.open(url, "_blank");
+                    } else {
+                        console.warn("Location data is missing");
+                    }
+                };
+                return <Button onClick={openMap} icon={<EyeOutlined/>} />
+            }
+        },
+        {
+            title: t("Reject / Accept"),
+            width: 90,
             fixed: 'right',
             key: 'action',
             render: (props, data) => (
-                <Popconfirm
-                    title={t("Delete")}
-                    description={t("Are you sure to delete?")}
-                    onConfirm={() => useDelete(get(data,'id'))}
-                    okText={t("Yes")}
-                    cancelText={t("No")}
-                >
-                    <Button danger icon={<DeleteOutlined />}/>
-                </Popconfirm>
+                <Space>
+                    <Popconfirm
+                        title={t("Reject")}
+                        description={t("Are you sure to reject?")}
+                        onConfirm={() => useAccept(get(data,'id'),false)}
+                        okText={t("Yes")}
+                        cancelText={t("No")}
+                    >
+                        <Button danger icon={<CloseOutlined />}/>
+                    </Popconfirm>
+                    <Popconfirm
+                        title={t("Accept")}
+                        description={t("Are you sure to accept?")}
+                        onConfirm={() => useAccept(get(data,'id'),true)}
+                        okText={t("Yes")}
+                        cancelText={t("No")}
+                    >
+                        <Button type={"primary"} icon={<CheckOutlined />}/>
+                    </Popconfirm>
+                </Space>
             )
         }
     ]
 
-    const customRequest = async (options) => {
-        const { file, onSuccess, onError } = options;
-        const formData = new FormData();
-        formData.append('file', file);
-        fileUpload(
-            { url: URLS.pharmacies_add, attributes: formData, config: { headers: { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel' } } },
-            {
-                onSuccess: () => {
-                    onSuccess(true);
-                },
-                onError: (err) => {
-                    onError(err);
-                },
-            }
-        );
-    };
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
@@ -104,14 +133,6 @@ const PharmaciesContainer = () => {
                         onChange={(e) => setSearchKey(e.target.value)}
                         allowClear
                     />
-                    <Upload
-                        accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"}
-                        multiple={false}
-                        customRequest={customRequest}
-                        showUploadList={{showRemoveIcon:false}}
-                    >
-                        <Button icon={<UploadOutlined />}>{t("Upload excel file")}</Button>
-                    </Upload>
                 </Space>
 
                 <Table
