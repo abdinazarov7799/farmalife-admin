@@ -17,47 +17,47 @@ const DashboardSidebar = () => {
         {
             label: t("Regions"),
             key: "/regions",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+            access: [config.ROLES.ROLE_SUPER_ADMIN],
         },
         {
             label: t("Districts"),
             key: "/districts",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+            access: [config.ROLES.ROLE_SUPER_ADMIN],
         },
         {
             label: t("Medicines"),
             key: "/medicines",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_AREA_ADMIN],
         },
         {
             label: t("Visits"),
             key: "/visits",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_AREA_ADMIN],
         },
         {
             label: t("Stocks"),
             key: "/stocks",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_AREA_ADMIN],
         },
         {
             label: t("Doctors"),
             key: "/doctors",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_AREA_ADMIN],
         },
         {
             label: t("Med institutions"),
             key: "/med-institutions",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_AREA_ADMIN],
         },
         {
             label: t("Pharmacies"),
             key: "/pharmacies",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_USER],
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_AREA_ADMIN],
         },
         {
             label: t("Users"),
             key: "/users",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN,config.ROLES.ROLE_ADMIN],
+            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_AREA_ADMIN],
         },
         {
             label: t("Admins"),
@@ -67,12 +67,12 @@ const DashboardSidebar = () => {
         {
             label: t("Constants"),
             key: "/constants",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN],
+            access: [config.ROLES.ROLE_SUPER_ADMIN],
         },
         {
             label: t("Translations"),
             key: "/translations",
-            access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_ADMIN],
+            access: [config.ROLES.ROLE_SUPER_ADMIN],
         },
     ].filter((item) => {
         return hasAccess(get(user,'roles',[]),get(item,'access'));
