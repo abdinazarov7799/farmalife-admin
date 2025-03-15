@@ -23,6 +23,12 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
     const { data:districts,isLoading:isLoadingDistricts } = useGetAllQuery({
         key: KEYS.district_list,
         url: URLS.district_list,
+         params: {
+            params: {
+                size: 1000,
+                search: searchKey
+            }
+        },
     })
     useEffect(() => {
         form.setFieldsValue({
