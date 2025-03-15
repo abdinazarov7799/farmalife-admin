@@ -35,11 +35,11 @@ const DashboardHeader = () => {
     let items = [
         {
             key: "RU",
-            icon: <Image src={ru} preview={false} onClick={() => changeLang("RU")}  width={25} height={25} alt={"russian flag image"} />,
+            icon: <Image src={ru} preview={false} onClick={() => changeLang("ru")}  width={25} height={25} alt={"russian flag image"} />,
         },
         {
             key: "UZ",
-            icon: <Image src={uz} preview={false} onClick={() => changeLang("UZ")} width={25} height={25} alt={"uzbek flag image"} />,
+            icon: <Image src={uz} preview={false} onClick={() => changeLang("uz")} width={25} height={25} alt={"uzbek flag image"} />,
         },
     ].filter(item => !isEqual(get(item,"key"),lang));;
     const logout = () => {
@@ -100,7 +100,7 @@ const DashboardHeader = () => {
                           overlayClassName={"language-dropdown"}
                           over
                       >
-                          <Image src={isEqual(lang,"RU") ? ru : uz} preview={false} width={30} height={30} alt={"flag image"} />
+                          <Image src={isEqual(lang,"ru") ? ru : uz} preview={false} width={30} height={30} alt={"flag image"} />
                       </Dropdown>
                       <Button
                           icon={<LogoutOutlined />}
