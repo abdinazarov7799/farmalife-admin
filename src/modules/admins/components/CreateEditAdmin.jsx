@@ -39,7 +39,6 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
         params: {
             params: {
                 size: 1000,
-                search: searchKey
             }
         },
     });
