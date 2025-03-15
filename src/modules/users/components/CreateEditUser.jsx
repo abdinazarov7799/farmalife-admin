@@ -20,16 +20,16 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
         hideSuccessToast: false
     });
 
-    const { data:districts,isLoading:isLoadingDistricts } = useGetAllQuery({
+    const {data:districts,isLoading:isLoadingDistricts} = useGetAllQuery({
         key: KEYS.district_list,
         url: URLS.district_list,
         params: {
             params: {
                 size: 1000,
-                search: searchKey
+                search: searchKey,
             }
         },
-    })
+    });
     useEffect(() => {
         form.setFieldsValue({
             firstName: get(itemData,'firstName'),
