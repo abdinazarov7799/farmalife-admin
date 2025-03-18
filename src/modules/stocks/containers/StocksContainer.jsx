@@ -7,6 +7,7 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {EyeOutlined} from "@ant-design/icons";
+import dayjs from "dayjs";
 
 const StocksContainer = () => {
     const {t} = useTranslation();
@@ -66,11 +67,13 @@ const StocksContainer = () => {
             title: t("Offline created at"),
             dataIndex: "offlineCreatedAt",
             key: "offlineCreatedAt",
+            render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
         },
         {
             title: t("Created at"),
             dataIndex: "createdAt",
             key: "createdAt",
+            render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
         },
         {
             title: t("Details"),

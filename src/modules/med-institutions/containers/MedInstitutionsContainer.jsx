@@ -8,6 +8,7 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 import {CheckOutlined, CloseOutlined, EyeOutlined} from "@ant-design/icons";
+import dayjs from "dayjs";
 
 const MedInstitutionsContainer = () => {
     const {t} = useTranslation();
@@ -64,6 +65,7 @@ const MedInstitutionsContainer = () => {
             title: t("Created at"),
             dataIndex: "createdAt",
             key: "createdAt",
+            render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
         },
         {
             title: t("Image"),

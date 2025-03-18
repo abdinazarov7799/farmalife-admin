@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
+import dayjs from "dayjs";
 
 const VisitsContainer = () => {
     const {t} = useTranslation();
@@ -69,6 +70,7 @@ const VisitsContainer = () => {
             title: t("Created at"),
             dataIndex: "createdAt",
             key: "createdAt",
+            render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
         },
     ]
     return (

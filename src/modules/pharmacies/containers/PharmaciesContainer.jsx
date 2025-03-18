@@ -4,12 +4,11 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import Container from "../../../components/Container.jsx";
-import {Button, Image, Input, Pagination, Popconfirm, Row, Space, Table, Upload} from "antd";
+import {Button, Image, Input, Pagination, Popconfirm, Row, Space, Table} from "antd";
 import {get} from "lodash";
-import {CheckOutlined, CloseOutlined, DeleteOutlined, EyeOutlined, UploadOutlined} from "@ant-design/icons";
-import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
-import usePostQuery from "../../../hooks/api/usePostQuery.js";
+import {CheckOutlined, CloseOutlined, EyeOutlined} from "@ant-design/icons";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
+import dayjs from "dayjs";
 
 const PharmaciesContainer = () => {
     const {t} = useTranslation();
@@ -70,6 +69,7 @@ const PharmaciesContainer = () => {
             title: t("Created at"),
             dataIndex: "createdAt",
             key: "createdAt",
+            render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
         },
         {
             title: t("Image"),
