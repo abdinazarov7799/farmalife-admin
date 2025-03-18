@@ -12,6 +12,7 @@ import {EditOutlined} from "@ant-design/icons";
 const ConstantsContainer = () => {
     const {t} = useTranslation();
     const [isModalOpen,setIsModalOpen] = useState(false);
+    const [selected, setSelected] = useState(null);
 
     const {data,isLoading,refetch} = useGetAllQuery({
         key: KEYS.constants_list,
@@ -38,20 +39,23 @@ const ConstantsContainer = () => {
             dataIndex: "comment",
             key: "comment",
         },
+        {
+            title: t("Edit"),
+            dataIndex: "edit",
+            key: "edit",
+            width: 100,
+            render: (props, data, index) => (
+                <Button key={index} icon={<EditOutlined />} onClick={() => {
+                    setIsModalOpen(true)
+                    setSelected(data)
+                }} />
+            )
+        }
     ]
 
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
-                <Row justify={"end"}>
-                    <Button
-                        icon={<EditOutlined />}
-                        type={"primary"}
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        {t("Edit")}
-                    </Button>
-                </Row>
                 <Table
                     columns={columns}
                     dataSource={get(data,'data',[])}
@@ -67,7 +71,7 @@ const ConstantsContainer = () => {
                 onCancel={() => setIsModalOpen(false)}
                 footer={null}
             >
-                <EditConstants setIsModalOpen={setIsModalOpen} refetch={refetch} data={get(data,'data',[])} />
+                <EditConstants setIsModalOpen={setIsModalOpen} selected={selected} />
             </Modal>
         </Container>
     );
