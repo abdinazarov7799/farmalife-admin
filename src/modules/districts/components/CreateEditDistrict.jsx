@@ -25,7 +25,7 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
         url: URLS.region_list,
         params: {
             params: {
-                size: 50
+                size: 1000
             }
         }
     })

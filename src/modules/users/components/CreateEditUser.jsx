@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import usePostQuery from "../../../hooks/api/usePostQuery.js";
 import {KEYS} from "../../../constants/key.js";
@@ -11,6 +11,7 @@ import usePutQuery from "../../../hooks/api/usePatchQuery.js";
 const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
     const { t } = useTranslation();
     const [form] = Form.useForm();
+    const [selectedRegionId, setSelectedRegionId] = useState(null);
 
     const { mutate, isLoading } = usePostQuery({
         listKeyId: KEYS.users_list,
@@ -21,14 +22,25 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
     });
 
     const {data:districts,isLoading:isLoadingDistricts} = useGetAllQuery({
-        key: KEYS.district_list,
+        key: `${KEYS.district_list}_${selectedRegionId}`,
         url: URLS.district_list,
         params: {
             params: {
                 size: 1000,
+                regionId: selectedRegionId
             }
         },
+        enabled: !!selectedRegionId
     });
+    const { data:regions,isLoading:isLoadingRegions } = useGetAllQuery({
+        key: KEYS.region_list,
+        url: URLS.region_list,
+        params: {
+            params: {
+                size: 1000
+            }
+        }
+    })
     useEffect(() => {
         form.setFieldsValue({
             firstName: get(itemData,'firstName'),
@@ -40,9 +52,11 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
     }, [itemData]);
 
     const onFinish = (values) => {
+        const {region,blocked,...formData} = values;
+
         if (itemData){
             mutateEdit(
-                { url: `${URLS.user_edit}/${get(itemData,'id')}`, attributes: values },
+                { url: `${URLS.user_edit}/${get(itemData,'id')}`, attributes: {...formData, blocked: !!blocked} },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -52,7 +66,7 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
             );
         }else {
             mutate(
-                { url: URLS.user_add, attributes: values },
+                { url: URLS.user_add, attributes: {...formData, blocked: !!blocked} },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -93,6 +107,22 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
                     <Input />
                 </Form.Item>
                 <Form.Item
+                    label={t("Region")}
+                    name="region"
+                    rules={[{required: true,}]}>
+                    <Select
+                        placeholder={t("Region")}
+                        loading={isLoadingRegions}
+                        options={get(regions,'data.content',[])?.map((item) => {
+                            return {
+                                value: get(item,'id'),
+                                label: `${get(item,'nameUz')} / ${get(item,'nameRu')}`,
+                            }
+                        })}
+                        onChange={(value) => setSelectedRegionId(value)}
+                    />
+                </Form.Item>
+                <Form.Item
                     label={t("Districts")}
                     name="districtIds"
                     rules={[{required: true,}]}>
@@ -112,7 +142,7 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
                     label={t("Blocked")}
                     name="blocked"
                 >
-                    <Switch />
+                    <Switch defaultValue={false}/>
                 </Form.Item>
 
                 <Form.Item>
