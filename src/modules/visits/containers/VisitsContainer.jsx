@@ -1,17 +1,19 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Input, Pagination, Row, Space, Table} from "antd";
+import {Input, Pagination, Row, Select, Space, Table} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import dayjs from "dayjs";
+import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 
 const VisitsContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
-    const [searchKey,setSearchKey] = useState();
+    const [searchKey,setSearchKey] = useState(null);
+    const [userId, setUserId] = useState(null);
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.visit_list,
@@ -19,11 +21,22 @@ const VisitsContainer = () => {
         params: {
             params: {
                 size: 10,
-                search: searchKey
+                search: searchKey,
+                userId
             }
         },
         page
     });
+
+    const {data:users,isLoading:isLoadingUsers} = useGetAllQuery({
+        key: KEYS.users_list,
+        url: URLS.users_list,
+        params: {
+            params: {
+                size: 1000,
+            }
+        }
+    })
 
     const columns = [
         {
@@ -81,6 +94,20 @@ const VisitsContainer = () => {
                         placeholder={t("Search")}
                         onChange={(e) => setSearchKey(e.target.value)}
                         allowClear
+                    />
+
+                    <Select
+                        allowClear
+                        loading={isLoadingUsers}
+                        options={get(users,'data.content',[])?.map(user => ({
+                            label: `${get(user,'firstName')} ${get(user,'lastName')}`,
+                            value: get(user,'id'),
+                        }))}
+                        style={{width: 300}}
+                        placeholder={t("User")}
+                        onClear={() => setUserId(null)}
+                        onSelect={(value) => setUserId(value)}
+                        showSearch
                     />
                 </Space>
 
