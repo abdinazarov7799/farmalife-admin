@@ -6,7 +6,7 @@ import {URLS} from "../../../constants/url.js";
 import {Button, Form, Input, Select, Switch} from "antd";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 import {get} from "lodash";
-import usePutQuery from "../../../hooks/api/usePatchQuery.js";
+import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
 
 const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
     const { t } = useTranslation();
@@ -16,7 +16,7 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
     const { mutate, isLoading } = usePostQuery({
         listKeyId: KEYS.users_list,
     });
-    const { mutate:mutateEdit, isLoading:isLoadingEdit } = usePutQuery({
+    const { mutate:mutateEdit, isLoading:isLoadingEdit } = usePatchQuery({
         listKeyId: KEYS.users_list,
         hideSuccessToast: false
     });
