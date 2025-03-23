@@ -4,7 +4,7 @@ import "nprogress/nprogress.css";
 import {ConfigProvider, theme} from "antd";
 import {useSettingsStore} from "../store/index.js";
 import {get} from "lodash";
-const {defaultAlgorithm, darkAlgorithm} = theme;
+const {defaultAlgorithm, darkAlgorithm,compactAlgorithm} = theme;
 
 const GlobalStyles = createGlobalStyle`
   * {
@@ -52,8 +52,22 @@ const GlobalStyles = createGlobalStyle`
 `
 const Theme = ({ children }) => {
     const darkMode = useSettingsStore((state) => get(state, "darkMode"));
+    const compactMode = useSettingsStore((state) => get(state, "compactMode"));
+
+    const getAlgorithm = () => {
+        if (darkMode && compactMode) {
+            return [darkAlgorithm,compactAlgorithm]
+        }else if (!darkMode && compactMode) {
+            return [defaultAlgorithm,compactAlgorithm]
+        }else if (darkMode && !compactMode) {
+            return [darkAlgorithm]
+        }else {
+            return [defaultAlgorithm]
+        }
+    }
+
     const themeConfig = {
-        algorithm:  darkMode ? darkAlgorithm : defaultAlgorithm,
+        algorithm:  getAlgorithm(),
         fonts: {
             heading: 'Montserrat',
             body: 'Montserrat',

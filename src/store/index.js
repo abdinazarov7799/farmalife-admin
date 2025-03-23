@@ -14,12 +14,14 @@ let store = (set) => ({
 let settingsStore = (set) => ({
     token: null,
     darkMode: storage.get('darkMode') || false,
+    compactMode: storage.get('compactMode') || false,
     lang: storage.get('lang') ||  config.DEFAULT_APP_LANG,
     refreshToken: null,
     setRefreshToken: (refreshToken) => set(state => ({...state, refreshToken})),
     setToken: (token) => set(state => ({...state, token})),
     setLang: (lang) => set(state => ({...state, lang})),
     setDarkMode: () => set(state => ({...state, darkMode: !state.darkMode})),
+    setCompactMode: () => set(state => ({...state, compactMode: !state.compactMode})),
 })
 
 
