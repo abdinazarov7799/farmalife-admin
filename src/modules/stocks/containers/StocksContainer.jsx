@@ -169,8 +169,8 @@ const StocksContainer = () => {
 
                     <Row justify={"end"} style={{marginTop: 10}}>
                         <Pagination
-                            current={page+1}
-                            onChange={(page) => setPage(page - 1)}
+                            current={detailsPage+1}
+                            onChange={(page) => setDetailsPage(page - 1)}
                             total={get(details,'data.totalPages') * 10 }
                             showSizeChanger={false}
                         />
