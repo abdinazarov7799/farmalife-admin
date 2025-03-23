@@ -1,19 +1,21 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Image, Input, Pagination, Popconfirm, Row, Space, Table} from "antd";
+import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
-import {CheckOutlined, CloseOutlined, EyeOutlined} from "@ant-design/icons";
+import {CheckOutlined, CloseOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
+import EditMed from "../components/EditMed.jsx";
 
 const MedInstitutionsContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
     const [searchKey,setSearchKey] = useState();
+    const [selected, setSelected] = useState(null);
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.med_institutions_list,
@@ -32,7 +34,7 @@ const MedInstitutionsContainer = () => {
     })
 
     const useAccept = (id,isAccept) => {
-        accept({url: `${URLS.med_institutions_edit}/${id}?accept=${isAccept}`})
+        accept({url: `${URLS.med_institutions_edit_status}/${id}?accept=${isAccept}`})
     }
 
     const columns = [
@@ -89,6 +91,14 @@ const MedInstitutionsContainer = () => {
                 };
                 return <Button onClick={openMap} icon={<EyeOutlined/>} />
             }
+        },
+        {
+            title: t("Edit"),
+            fixed: 'right',
+            key: 'action',
+            render: (props, data) => (
+                <Button icon={<EditOutlined />} onClick={() => setSelected(data)} />
+            )
         },
         {
             title: t("Reject / Accept"),
@@ -148,6 +158,14 @@ const MedInstitutionsContainer = () => {
                     />
                 </Row>
             </Space>
+            <Modal
+                title={t('Edit')}
+                open={!!selected}
+                onCancel={() => setSelected(null)}
+                footer={null}
+            >
+                <EditMed setSelected={setSelected} selected={selected} />
+            </Modal>
         </Container>
     );
 };
