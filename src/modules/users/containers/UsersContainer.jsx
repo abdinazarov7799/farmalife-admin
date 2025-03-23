@@ -120,6 +120,14 @@ const UsersContainer = () => {
                     size={"middle"}
                     pagination={false}
                     loading={isLoading}
+                    onRow={(props) => {
+                        if (!get(props,'hasActivityToday')){
+                            return {
+                                style: {
+                                    backgroundColor: "rgba(255,99,99,0.29)"}
+                            }
+                        }
+                    }}
                 />
 
                 <Row justify={"end"} style={{marginTop: 10}}>
