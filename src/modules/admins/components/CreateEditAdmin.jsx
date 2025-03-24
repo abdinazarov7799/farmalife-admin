@@ -15,6 +15,7 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
     const [form] = Form.useForm();
     const [selectedRole, setSelectedRole] = useState(null);
     const [searchKey, setSearchKey] = useState(null);
+    const [selectedRegionId, setSelectedRegionId] = useState(null);
 
     const { mutate, isLoading } = usePostQuery({
         listKeyId: KEYS.admins_list,
@@ -34,20 +35,32 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
     }, [itemData]);
 
     const {data:districts,isLoading:isLoadingDistricts} = useGetAllQuery({
-        key: KEYS.district_list,
+        key: `${KEYS.district_list}_${selectedRegionId}`,
         url: URLS.district_list,
         params: {
             params: {
                 size: 1000,
-                search: searchKey,
+                regionId: selectedRegionId
             }
         },
+        enabled: !!selectedRegionId
     });
 
+    const { data:regions,isLoading:isLoadingRegions } = useGetAllQuery({
+        key: KEYS.region_list,
+        url: URLS.region_list,
+        params: {
+            params: {
+                size: 1000
+            }
+        }
+    })
+
     const onFinish = (values) => {
+        const {region,...formData} = values;
         if (itemData){
             mutateEdit(
-                { url: `${URLS.admin_edit}/${get(itemData,'id')}`, attributes: values },
+                { url: `${URLS.admin_edit}/${get(itemData,'id')}`, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -57,7 +70,7 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
             );
         }else {
             mutate(
-                { url: URLS.admin_add, attributes: values },
+                { url: URLS.admin_add, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -112,27 +125,45 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
 
                 {
                     isEqual(selectedRole,config.ROLES.ROLE_AREA_ADMIN) && (
-                        <Form.Item
-                            label={t("Districts")}
-                            name="districtIds"
-                            rules={[{required: true,}]}>
-                            <Select
-                                placeholder={t("District")}
-                                showSearch
-                                onSearch={(values) => {
-                                    setSearchKey(values)
-                                }}
-                                allowClear
-                                loading={isLoadingDistricts}
-                                mode={"multiple"}
-                                options={get(districts,'data.content',[])?.map((item) => {
-                                    return {
-                                        value: get(item,'id'),
-                                        label: `${get(item,'nameUz')} / ${get(item,'nameRu')}`,
-                                    }
-                                })}
-                            />
-                        </Form.Item>
+                        <>
+                            <Form.Item
+                                label={t("Region")}
+                                name="region"
+                                rules={[{required: true,}]}>
+                                <Select
+                                    placeholder={t("Region")}
+                                    loading={isLoadingRegions}
+                                    options={get(regions,'data.content',[])?.map((item) => {
+                                        return {
+                                            value: get(item,'id'),
+                                            label: `${get(item,'nameUz')} / ${get(item,'nameRu')}`,
+                                        }
+                                    })}
+                                    onChange={(value) => setSelectedRegionId(value)}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label={t("Districts")}
+                                name="districtIds"
+                                rules={[{required: true,}]}>
+                                <Select
+                                    placeholder={t("District")}
+                                    showSearch
+                                    onSearch={(values) => {
+                                        setSearchKey(values)
+                                    }}
+                                    allowClear
+                                    loading={isLoadingDistricts}
+                                    mode={"multiple"}
+                                    options={get(districts,'data.content',[])?.map((item) => {
+                                        return {
+                                            value: get(item,'id'),
+                                            label: `${get(item,'nameUz')} / ${get(item,'nameRu')}`,
+                                        }
+                                    })}
+                                />
+                            </Form.Item>
+                        </>
                     )
                 }
 
