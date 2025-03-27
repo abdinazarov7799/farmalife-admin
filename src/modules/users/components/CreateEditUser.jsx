@@ -5,8 +5,9 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {Button, Form, Input, Select, Switch} from "antd";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
-import {get} from "lodash";
+import {get, head} from "lodash";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
+import InputMask from 'react-input-mask';
 
 const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
     const { t } = useTranslation();
@@ -30,7 +31,7 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
                 regionId: selectedRegionId
             }
         },
-        enabled: !!selectedRegionId
+        enabled: !!selectedRegionId || !!get(itemData,'region')
     });
     const { data:regions,isLoading:isLoadingRegions } = useGetAllQuery({
         key: KEYS.region_list,
@@ -41,12 +42,14 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
             }
         }
     })
+    console.log(itemData,'itemData')
     useEffect(() => {
         form.setFieldsValue({
-            firstName: get(itemData,'firstName'),
+            firstName: get(itemData,'firstname'),
             lastName: get(itemData,'lastName'),
             phoneNumber: get(itemData,'phoneNumber'),
-            districtIds: get(itemData,'districtIds'),
+            region: get(head(get(itemData,'region',[])),'id'),
+            districtIds: get(itemData,'district')?.map(item => get(item,'id')),
             blocked: get(itemData,'blocked'),
         });
     }, [itemData]);
@@ -102,9 +105,14 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
                 <Form.Item
                     label={t("Phone number")}
                     name="phoneNumber"
-                    rules={[{required: true,}]}
+                    rules={[
+                        { required: true, message: t("Please enter your phone number") },
+                        { pattern: /^\+998\d{9}$/, message: t("Invalid phone number format") }
+                    ]}
                 >
-                    <Input />
+                    <InputMask mask="+998999999999" maskChar="_">
+                        {(inputProps) => <Input {...inputProps} />}
+                    </InputMask>
                 </Form.Item>
                 <Form.Item
                     label={t("Region")}
