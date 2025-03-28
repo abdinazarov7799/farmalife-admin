@@ -107,7 +107,6 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
                     name="phoneNumber"
                     rules={[
                         { required: true, message: t("Please enter your phone number") },
-                        { pattern: /^\+998\d{9}$/, message: t("Invalid phone number format") }
                     ]}
                 >
                     <InputMask mask="+998999999999" maskChar="_">
