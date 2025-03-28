@@ -80,6 +80,8 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
         }
     };
 
+    const phoneNumberRegex = /^(\+998[0-9]{9})$/;
+
     return (
         <>
             <Form
@@ -107,11 +109,10 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
                     name="phoneNumber"
                     rules={[
                         { required: true, message: t("Please enter your phone number") },
+                        { pattern: phoneNumberRegex, message: t("Invalid phone number format") },
                     ]}
                 >
-                    <InputMask mask="+998999999999" maskChar="_">
-                        {(inputProps) => <Input {...inputProps} />}
-                    </InputMask>
+                    <Input placeholder="+998xxxxxxxxx" />
                 </Form.Item>
                 <Form.Item
                     label={t("Region")}
