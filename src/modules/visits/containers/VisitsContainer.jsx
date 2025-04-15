@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Input, Pagination, Row, Select, Space, Table} from "antd";
+import {Button, Input, Pagination, Popconfirm, Row, Select, Space, Table} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
@@ -8,6 +8,8 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import dayjs from "dayjs";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
+import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
+import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 
 const VisitsContainer = () => {
     const {t} = useTranslation();
@@ -37,6 +39,13 @@ const VisitsContainer = () => {
             }
         }
     })
+
+    const { mutate } = useDeleteQuery({
+        listKeyId: KEYS.visit_list
+    });
+    const useDelete = (id) => {
+        mutate({url: `${URLS.visit_delete}/${id}`})
+    }
 
     const columns = [
         {
@@ -85,6 +94,22 @@ const VisitsContainer = () => {
             key: "createdAt",
             render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
         },
+        {
+            title: t("Delete"),
+            fixed: 'right',
+            key: 'action',
+            render: (props, data) => (
+                <Popconfirm
+                    title={t("Delete")}
+                    description={t("Are you sure to delete?")}
+                    onConfirm={() => useDelete(get(data,'id'))}
+                    okText={t("Yes")}
+                    cancelText={t("No")}
+                >
+                    <Button danger icon={<DeleteOutlined />}/>
+                </Popconfirm>
+            )
+        }
     ]
     return (
         <Container>

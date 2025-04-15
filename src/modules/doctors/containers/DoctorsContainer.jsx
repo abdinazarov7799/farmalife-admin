@@ -1,17 +1,21 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Input, Pagination, Row, Space, Table} from "antd";
+import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import dayjs from "dayjs";
+import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
+import EditDoctor from "../components/EditDoctor.jsx";
 
 const DoctorsContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
     const [searchKey,setSearchKey] = useState();
+    const [selected, setSelected] = useState(null);
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.doctors_list,
@@ -24,6 +28,13 @@ const DoctorsContainer = () => {
         },
         page
     });
+
+    const { mutate } = useDeleteQuery({
+        listKeyId: KEYS.doctors_list
+    });
+    const useDelete = (id) => {
+        mutate({url: `${URLS.doctor_delete}/${id}`})
+    }
 
     const columns = [
         {
@@ -72,9 +83,39 @@ const DoctorsContainer = () => {
             key: "createdAt",
             render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
         },
+        {
+            title: t("Edit / Delete"),
+            width: 120,
+            fixed: 'right',
+            key: 'action',
+            render: (props, data, index) => (
+                <Space key={index}>
+                    <Button icon={<EditOutlined />} onClick={() => {
+                        setSelected(data)
+                    }} />
+                    <Popconfirm
+                        title={t("Delete")}
+                        description={t("Are you sure to delete?")}
+                        onConfirm={() => useDelete(get(data,'id'))}
+                        okText={t("Yes")}
+                        cancelText={t("No")}
+                    >
+                        <Button danger icon={<DeleteOutlined />}/>
+                    </Popconfirm>
+                </Space>
+            )
+        }
     ]
     return (
         <Container>
+            <Modal
+                title={t('Edit')}
+                open={!!selected}
+                onCancel={() => setSelected(null)}
+                footer={null}
+            >
+                <EditDoctor setSelected={setSelected} selected={selected} />
+            </Modal>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
                 <Space size={"middle"}>
                     <Input.Search

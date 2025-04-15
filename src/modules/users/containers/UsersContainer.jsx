@@ -22,7 +22,7 @@ const UsersContainer = () => {
         url: URLS.users_list,
         params: {
             params: {
-                size: 10,
+                size: 20,
                 search: searchKey
             }
         },

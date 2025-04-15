@@ -5,34 +5,54 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {Button, Form, Input, Select, Switch} from "antd";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
-import {get, head} from "lodash";
+import {get, head, isArray, isEmpty} from "lodash";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
-import InputMask from 'react-input-mask';
 
 const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
     const { t } = useTranslation();
     const [form] = Form.useForm();
     const [selectedRegionId, setSelectedRegionId] = useState(null);
+    const [districts, setDistricts] = useState([]);
 
     const { mutate, isLoading } = usePostQuery({
         listKeyId: KEYS.users_list,
+    });
+
+    const { mutate:mutateDisticts, isLoading:isLoadingDistricts } = usePostQuery({
+        listKeyId: KEYS.users_list,
+        hideSuccessToast: true
     });
     const { mutate:mutateEdit, isLoading:isLoadingEdit } = usePatchQuery({
         listKeyId: KEYS.users_list,
         hideSuccessToast: false
     });
 
-    const {data:districts,isLoading:isLoadingDistricts} = useGetAllQuery({
-        key: `${KEYS.district_list}_${selectedRegionId}`,
-        url: URLS.district_list,
-        params: {
-            params: {
-                size: 1000,
-                regionId: selectedRegionId
-            }
-        },
-        enabled: !!selectedRegionId || !!get(itemData,'region')
-    });
+    useEffect(() => {
+        if (!isEmpty(selectedRegionId) && isArray(selectedRegionId)) {
+            mutateDisticts(
+                {
+                    url: URLS.district_list, attributes: selectedRegionId
+                },
+                {
+                    onSuccess: ({data}) => {
+                        setDistricts(data)
+                    }
+                }
+            )
+        }
+    },[selectedRegionId])
+
+    // const {data:districts,isLoading:isLoadingDistricts} = useGetAllQuery({
+    //     key: `${KEYS.district_list}_${selectedRegionId}`,
+    //     url: URLS.district_list,
+    //     params: {
+    //         params: {
+    //             size: 1000,
+    //             regionId: selectedRegionId
+    //         }
+    //     },
+    //     enabled: !!selectedRegionId || !!get(itemData,'region')
+    // });
     const { data:regions,isLoading:isLoadingRegions } = useGetAllQuery({
         key: KEYS.region_list,
         url: URLS.region_list,
@@ -42,13 +62,13 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
             }
         }
     })
-    console.log(itemData,'itemData')
+
     useEffect(() => {
         form.setFieldsValue({
             firstName: get(itemData,'firstname'),
             lastName: get(itemData,'lastName'),
             phoneNumber: get(itemData,'phoneNumber'),
-            region: get(head(get(itemData,'region',[])),'id'),
+            region: get(itemData,'region')?.map(item => get(item,'id')),
             districtIds: get(itemData,'district')?.map(item => get(item,'id')),
             blocked: get(itemData,'blocked'),
         });
@@ -121,6 +141,7 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
                     <Select
                         placeholder={t("Region")}
                         loading={isLoadingRegions}
+                        mode={"multiple"}
                         options={get(regions,'data.content',[])?.map((item) => {
                             return {
                                 value: get(item,'id'),
@@ -138,7 +159,7 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
                         placeholder={t("District")}
                         loading={isLoadingDistricts}
                         mode={"multiple"}
-                        options={get(districts,'data.content',[])?.map((item) => {
+                        options={districts?.map((item) => {
                             return {
                                 value: get(item,'id'),
                                 label: `${get(item,'nameUz')} / ${get(item,'nameRu')}`,
