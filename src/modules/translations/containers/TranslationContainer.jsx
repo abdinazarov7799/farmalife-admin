@@ -3,7 +3,7 @@ import {URLS} from "../../../constants/url";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery";
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Button, Input, Modal, Pagination, Row, Table} from "antd";
+import {Button, Input, Modal, Pagination, Row, Table, Typography} from "antd";
 import {find, get, isEqual} from "lodash";
 import {EditOutlined, SearchOutlined} from "@ant-design/icons";
 import LanguageForm from "../components/LanguageForm";
@@ -104,11 +104,14 @@ const TranslationContainer = () => {
             <Modal title={t("Add Translations")} open={isModalOpen} onCancel={handleCancel} footer={null}>
                 <LanguageForm data={selected} handleCancel={handleCancel} refetch={refetch}/>
             </Modal>
-            <Row justify={"end"} style={{marginTop: 10}}>
+            <Row justify={"space-between"} style={{marginTop: 10}}>
+                <Typography.Title level={4}>
+                    {t("Miqdori")}: {get(data,'data.totalElements')} {t("ta")}
+                </Typography.Title>
                 <Pagination
                     current={page+1}
                     onChange={(page) => setPage(page - 1)}
-                    total={get(data,'data.totalPages') * 10}
+                    total={get(data,'data.totalPages') * 10 }
                     showSizeChanger={false}
                 />
             </Row>

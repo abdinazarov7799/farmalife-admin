@@ -165,7 +165,10 @@ const UsersContainer = () => {
                     }}
                 />
 
-                <Row justify={"end"} style={{marginTop: 10}}>
+                <Row justify={"space-between"} style={{marginTop: 10}}>
+                    <Typography.Title level={4}>
+                        {t("Miqdori")}: {get(data,'data.totalElements')} {t("ta")}
+                    </Typography.Title>
                     <Pagination
                         current={page+1}
                         onChange={(page) => setPage(page - 1)}

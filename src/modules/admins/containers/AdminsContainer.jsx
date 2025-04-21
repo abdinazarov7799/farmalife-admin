@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table} from "antd";
+import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
@@ -123,7 +123,10 @@ const AdminsContainer = () => {
                     loading={isLoading}
                 />
 
-                <Row justify={"end"} style={{marginTop: 10}}>
+                <Row justify={"space-between"} style={{marginTop: 10}}>
+                    <Typography.Title level={4}>
+                        {t("Miqdori")}: {get(data,'data.totalElements')} {t("ta")}
+                    </Typography.Title>
                     <Pagination
                         current={page+1}
                         onChange={(page) => setPage(page - 1)}

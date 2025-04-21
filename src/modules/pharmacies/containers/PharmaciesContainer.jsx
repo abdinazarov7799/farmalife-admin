@@ -4,7 +4,7 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import Container from "../../../components/Container.jsx";
-import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table} from "antd";
+import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
@@ -177,7 +177,10 @@ const PharmaciesContainer = () => {
                     loading={isLoading}
                 />
 
-                <Row justify={"end"} style={{marginTop: 10}}>
+                <Row justify={"space-between"} style={{marginTop: 10}}>
+                    <Typography.Title level={4}>
+                        {t("Miqdori")}: {get(data,'data.totalElements')} {t("ta")}
+                    </Typography.Title>
                     <Pagination
                         current={page+1}
                         onChange={(page) => setPage(page - 1)}
