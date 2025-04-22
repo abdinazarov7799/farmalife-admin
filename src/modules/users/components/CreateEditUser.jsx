@@ -64,11 +64,13 @@ const CreateEditUser = ({itemData,setIsModalOpen,refetch}) => {
     })
 
     useEffect(() => {
+        const regionIds = get(itemData,'region')?.map(item => get(item,'id'));
+        setSelectedRegionId(regionIds);
         form.setFieldsValue({
             firstName: get(itemData,'firstname'),
             lastName: get(itemData,'lastName'),
             phoneNumber: get(itemData,'phoneNumber'),
-            region: get(itemData,'region')?.map(item => get(item,'id')),
+            region: regionIds,
             districtIds: get(itemData,'district')?.map(item => get(item,'id')),
             blocked: get(itemData,'blocked'),
         });
