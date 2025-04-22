@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Image, Input, Modal, Pagination, Row, Select, Space, Table, Typography} from "antd";
+import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Select, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
-import {EyeOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EyeOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
+import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 
 const StocksContainer = () => {
     const {t} = useTranslation();
@@ -48,6 +49,13 @@ const StocksContainer = () => {
         }
     })
 
+    const { mutate } = useDeleteQuery({
+        listKeyId: KEYS.stocks_list
+    });
+    const useDelete = (id) => {
+        mutate({url: `${URLS.stocks_delete}/${id}`})
+    }
+
     const columns = [
         {
             title: t("ID"),
@@ -63,6 +71,22 @@ const StocksContainer = () => {
             title: t("User"),
             dataIndex: "userData",
             key: "userData"
+        },
+        {
+            title: t("Delete"),
+            fixed: 'right',
+            key: 'action',
+            render: (props, data) => (
+                <Popconfirm
+                    title={t("Delete")}
+                    description={t("Are you sure to delete?")}
+                    onConfirm={() => useDelete(get(data,'id'))}
+                    okText={t("Yes")}
+                    cancelText={t("No")}
+                >
+                    <Button danger icon={<DeleteOutlined />}/>
+                </Popconfirm>
+            )
         },
         {
             title: t("Pharmacy"),
@@ -147,7 +171,10 @@ const StocksContainer = () => {
                     loading={isLoading}
                 />
 
-                <Row justify={"end"} style={{marginTop: 10}}>
+                <Row justify={"space-between"} style={{marginTop: 10}}>
+                    <Typography.Title level={4}>
+                        {t("Miqdori")}: {get(data,'data.totalElements')} {t("ta")}
+                    </Typography.Title>
                     <Pagination
                         current={page+1}
                         onChange={(page) => setPage(page - 1)}
@@ -169,12 +196,12 @@ const StocksContainer = () => {
 
                     <Row justify={"space-between"} style={{marginTop: 10}}>
                         <Typography.Title level={4}>
-                            {t("Miqdori")}: {get(data,'data.totalElements')} {t("ta")}
+                            {t("Miqdori")}: {get(details,'data.totalElements')} {t("ta")}
                         </Typography.Title>
                         <Pagination
-                            current={page+1}
-                            onChange={(page) => setPage(page - 1)}
-                            total={get(data,'data.totalPages') * 10 }
+                            current={detailsPage+1}
+                            onChange={(page) => setDetailsPage(page - 1)}
+                            total={get(details,'data.totalPages') * 10 }
                             showSizeChanger={false}
                         />
                     </Row>

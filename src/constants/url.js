@@ -41,4 +41,5 @@ export const URLS = {
     doctor_edit: '/api/admin/doctors/edit',
     stocks_list: '/api/admin/stocks/get',
     stock_details: '/api/admin/stocks/get-details',
+    stocks_delete: '/api/admin/stocks/delete'
 };
