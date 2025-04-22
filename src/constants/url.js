@@ -35,6 +35,7 @@ export const URLS = {
     med_institutions_list: '/api/admin/med-institutions',
     med_institutions_edit_status: '/api/admin/med-institutions/edit-status',
     med_institutions_edit: '/api/admin/med-institutions/edit',
+    med_institutions_delete: '/api/admin/med-institutions/delete',
     doctors_list: '/api/admin/doctors/',
     doctor_delete: '/api/admin/doctors/delete',
     doctor_edit: '/api/admin/doctors/edit',

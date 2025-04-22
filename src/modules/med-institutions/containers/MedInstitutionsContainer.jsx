@@ -7,9 +7,10 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
-import {CheckOutlined, CloseOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
+import {CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
 import EditMed from "../components/EditMed.jsx";
+import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 
 const MedInstitutionsContainer = () => {
     const {t} = useTranslation();
@@ -35,6 +36,13 @@ const MedInstitutionsContainer = () => {
 
     const useAccept = (id,isAccept) => {
         accept({url: `${URLS.med_institutions_edit_status}/${id}?accept=${isAccept}`})
+    }
+
+    const { mutate } = useDeleteQuery({
+        listKeyId: KEYS.med_institutions_list
+    });
+    const useDelete = (id) => {
+        mutate({url: `${URLS.med_institutions_delete}/${id}`})
     }
 
     const columns = [
@@ -93,11 +101,25 @@ const MedInstitutionsContainer = () => {
             }
         },
         {
-            title: t("Edit"),
+            title: t("Edit / Delete"),
+            width: 120,
             fixed: 'right',
             key: 'action',
-            render: (props, data) => (
-                <Button icon={<EditOutlined />} onClick={() => setSelected(data)} />
+            render: (props, data, index) => (
+                <Space key={index}>
+                    <Button icon={<EditOutlined />} onClick={() => {
+                        setSelected(data)
+                    }} />
+                    <Popconfirm
+                        title={t("Delete")}
+                        description={t("Are you sure to delete?")}
+                        onConfirm={() => useDelete(get(data,'id'))}
+                        okText={t("Yes")}
+                        cancelText={t("No")}
+                    >
+                        <Button danger icon={<DeleteOutlined />}/>
+                    </Popconfirm>
+                </Space>
             )
         },
         {
