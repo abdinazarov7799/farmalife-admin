@@ -151,7 +151,7 @@ const StocksContainer = () => {
                         allowClear
                         loading={isLoadingUsers}
                         options={get(users,'data.content',[])?.map(user => ({
-                            label: `${get(user,'firstName')} ${get(user,'lastName')}`,
+                            label: `${get(user,'firstname')} ${get(user,'lastName')}`,
                             value: get(user,'id'),
                         }))}
                         style={{width: 300}}
