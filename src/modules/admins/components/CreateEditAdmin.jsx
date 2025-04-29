@@ -5,17 +5,16 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {Button, Form, Input, Select} from "antd";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
-import {get, isEqual} from "lodash";
+import {get, isArray, isEmpty, isEqual} from "lodash";
 import usePutQuery from "../../../hooks/api/usePatchQuery.js";
 import config from "../../../config.js";
-import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 
 const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
     const { t } = useTranslation();
     const [form] = Form.useForm();
     const [selectedRole, setSelectedRole] = useState(null);
-    const [searchKey, setSearchKey] = useState(null);
     const [selectedRegionId, setSelectedRegionId] = useState(null);
+    const [districts, setDistricts] = useState([]);
 
     const { mutate, isLoading } = usePostQuery({
         listKeyId: KEYS.admins_list,
@@ -26,24 +25,20 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
     });
 
     useEffect(() => {
+        const regionIds = get(itemData,'region')?.map(item => get(item,'id'));
+        setSelectedRegionId(regionIds);
         form.setFieldsValue({
             role: get(itemData,'role'),
             username: get(itemData,'username'),
             password: get(itemData,'password'),
+            region: regionIds,
             districtIds: get(itemData,'districtIds'),
         });
     }, [itemData]);
 
-    const {data:districts,isLoading:isLoadingDistricts} = useGetAllQuery({
-        key: `${KEYS.district_list}_${selectedRegionId}`,
-        url: URLS.district_list,
-        params: {
-            params: {
-                size: 1000,
-                regionId: selectedRegionId
-            }
-        },
-        enabled: !!selectedRegionId
+    const { mutate:mutateDisticts, isLoading:isLoadingDistricts } = usePostQuery({
+        listKeyId: KEYS.users_list,
+        hideSuccessToast: true
     });
 
     const { data:regions,isLoading:isLoadingRegions } = useGetAllQuery({
@@ -55,6 +50,21 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
             }
         }
     })
+
+    useEffect(() => {
+        if (!isEmpty(selectedRegionId) && isArray(selectedRegionId)) {
+            mutateDisticts(
+                {
+                    url: URLS.district_list, attributes: selectedRegionId
+                },
+                {
+                    onSuccess: ({data}) => {
+                        setDistricts(data)
+                    }
+                }
+            )
+        }
+    },[selectedRegionId])
 
     const onFinish = (values) => {
         const {region,...formData} = values;
@@ -133,6 +143,7 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
                                 <Select
                                     placeholder={t("Region")}
                                     loading={isLoadingRegions}
+                                    mode={"multiple"}
                                     options={get(regions,'data.content',[])?.map((item) => {
                                         return {
                                             value: get(item,'id'),
@@ -148,14 +159,9 @@ const CreateEditProduct = ({itemData,setIsModalOpen,refetch}) => {
                                 rules={[{required: true,}]}>
                                 <Select
                                     placeholder={t("District")}
-                                    showSearch
-                                    onSearch={(values) => {
-                                        setSearchKey(values)
-                                    }}
-                                    allowClear
                                     loading={isLoadingDistricts}
                                     mode={"multiple"}
-                                    options={get(districts,'data.content',[])?.map((item) => {
+                                    options={districts?.map((item) => {
                                         return {
                                             value: get(item,'id'),
                                             label: `${get(item,'nameUz')} / ${get(item,'nameRu')}`,
