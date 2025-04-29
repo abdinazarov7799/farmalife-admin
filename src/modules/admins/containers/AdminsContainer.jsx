@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
-import {get} from "lodash";
+import {Button, Input, Modal, Pagination, Popconfirm, Popover, Row, Space, Table, Typography} from "antd";
+import {get, isArray} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
-import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 import CreateEditAdmin from "../components/CreateEditAdmin.jsx";
 
@@ -52,6 +52,44 @@ const AdminsContainer = () => {
             title: t("Username"),
             dataIndex: "username",
             key: "username",
+        },
+        {
+            title: t("Region"),
+            dataIndex: "region",
+            key: "region",
+            render: (props) => (
+                <Popover
+                    content={<Space style={{width:'100%'}} direction={"vertical"}>
+                        {isArray(props) && (
+                            props?.map((item, index) => (
+                                <Typography.Text key={index}>{get(item,'nameUz')} / {get(item,'nameRu')}</Typography.Text>
+                            ))
+                        )}
+                    </Space>}
+                    title={t("Region")}
+                >
+                    <Button type="primary" icon={<EyeOutlined />}>{t("Region")}</Button>
+                </Popover>
+            )
+        },
+        {
+            title: t("District"),
+            dataIndex: "district",
+            key: "district",
+            render: (props) => (
+                <Popover
+                    content={<Space style={{width:'100%'}} direction={"vertical"}>
+                        {isArray(props) && (
+                            props?.map((item, index) => (
+                                <Typography.Text key={index}>{get(item,'nameUz')} / {get(item,'nameRu')}</Typography.Text>
+                            ))
+                        )}
+                    </Space>}
+                    title={t("District")}
+                >
+                    <Button type="primary" icon={<EyeOutlined />}>{t("District")}</Button>
+                </Popover>
+            )
         },
         {
             title: t("Edit / Delete"),

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {Button, DatePicker, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
@@ -14,7 +14,7 @@ import EditDoctor from "../components/EditDoctor.jsx";
 const DoctorsContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
-    const [searchKey,setSearchKey] = useState();
+    const [params, setParams] = useState({});
     const [selected, setSelected] = useState(null);
 
     const {data,isLoading} = usePaginateQuery({
@@ -23,7 +23,7 @@ const DoctorsContainer = () => {
         params: {
             params: {
                 size: 10,
-                search: searchKey
+                ...params,
             }
         },
         page
@@ -36,19 +36,62 @@ const DoctorsContainer = () => {
         mutate({url: `${URLS.doctor_delete}/${id}`})
     }
 
+    const onChange = (name,value) => {
+        setParams(prevState => ({...prevState, [name]: value}))
+    }
+
     const columns = [
         {
-            title: t("ID"),
+            title: (
+                <Space direction="vertical">
+                    {t("ID")}
+                    <Input
+                        placeholder={t("ID")}
+                        allowClear
+                        value={get(params,'userId','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('userId', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "id",
             key: "id",
         },
         {
-            title: t("FIO"),
+            title: (
+                <Space direction="vertical">
+                    {t("FIO")}
+                    <Input
+                        placeholder={t("FIO")}
+                        allowClear
+                        value={get(params,'fio','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('fio', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "fio",
             key: "fio"
         },
         {
-            title: t("Phone"),
+            title: (
+                <Space direction="vertical">
+                    {t("Phone")}
+                    <Input
+                        placeholder={t("Phone")}
+                        allowClear
+                        value={get(params,'phone','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('phone', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "phone",
             key: "phone"
         },
@@ -58,12 +101,38 @@ const DoctorsContainer = () => {
             key: "secondPlaceOfWork"
         },
         {
-            title: t("Specialization"),
+            title: (
+                <Space direction="vertical">
+                    {t("Specialization")}
+                    <Input
+                        allowClear
+                        placeholder={t("Specialization")}
+                        value={get(params,'specialization','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('specialization', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "specialization",
             key: "specialization"
         },
         {
-            title: t("Med institution"),
+            title: (
+                <Space direction="vertical">
+                    {t("Med institution")}
+                    <Input
+                        allowClear
+                        placeholder={t("Med institution")}
+                        value={get(params,'medInstitutionName','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('medInstitutionName', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "medInstitution",
             key: "medInstitution"
         },
@@ -78,7 +147,20 @@ const DoctorsContainer = () => {
             key: "createdBy"
         },
         {
-            title: t("Created at"),
+            title: (
+                <Space direction="vertical">
+                    {t("Created at")}
+                    <DatePicker
+                        showTime
+                        allowClear
+                        format="YYYY-MM-DDTHH:mm:ss"
+                        value={get(params, 'from') ? dayjs(get(params, 'from')) : null}
+                        onChange={(date, dateString) => {
+                            onChange('from', dateString);
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "createdAt",
             key: "createdAt",
             render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
@@ -117,13 +199,13 @@ const DoctorsContainer = () => {
                 <EditDoctor setSelected={setSelected} selected={selected} />
             </Modal>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
-                <Space size={"middle"}>
-                    <Input.Search
-                        placeholder={t("Search")}
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        allowClear
-                    />
-                </Space>
+                {/*<Space size={"middle"}>*/}
+                {/*    <Input.Search*/}
+                {/*        placeholder={t("Search")}*/}
+                {/*        onChange={(e) => setSearchKey(e.target.value)}*/}
+                {/*        allowClear*/}
+                {/*    />*/}
+                {/*</Space>*/}
 
                 <Table
                     columns={columns}
@@ -132,6 +214,7 @@ const DoctorsContainer = () => {
                     size={"middle"}
                     pagination={false}
                     loading={isLoading}
+                    scroll={{ x: 'max-content' }}
                 />
 
                 <Row justify={"space-between"} style={{marginTop: 10}}>

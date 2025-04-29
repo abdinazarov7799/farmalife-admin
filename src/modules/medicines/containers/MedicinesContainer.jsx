@@ -76,8 +76,8 @@ const MedicinesContainer = () => {
         },
         {
             title: t("Image"),
-            key: "imageUrl",
-            dataIndex: "imageUrl",
+            key: "photoUrl",
+            dataIndex: "photoUrl",
             align: "center",
             render: (props) => <Image src={props} width={80} height={50} />,
             access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_AREA_ADMIN],
