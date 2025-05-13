@@ -4,7 +4,7 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import Container from "../../../components/Container.jsx";
-import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {Button, DatePicker, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
@@ -17,6 +17,7 @@ const PharmaciesContainer = () => {
     const [page, setPage] = useState(0);
     const [searchKey,setSearchKey] = useState();
     const [selected, setSelected] = useState(null);
+    const [params, setParams] = useState({});
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.pharmacies_list,
@@ -24,7 +25,8 @@ const PharmaciesContainer = () => {
         params: {
             params: {
                 size: 10,
-                search: searchKey
+                search: searchKey,
+                ...params,
             }
         },
         page
@@ -44,6 +46,9 @@ const PharmaciesContainer = () => {
     const useDelete = (id) => {
         mutate({url: `${URLS.pharmacies_delete}/${id}`})
     }
+    const onChange = (name,value) => {
+        setParams(prevState => ({...prevState, [name]: value}))
+    }
 
     const columns = [
         {
@@ -52,12 +57,38 @@ const PharmaciesContainer = () => {
             key: "id",
         },
         {
-            title: t("Name"),
+            title: (
+                <Space direction="vertical">
+                    {t("Name")}
+                    <Input
+                        allowClear
+                        placeholder={t("Name")}
+                        value={get(params,'name','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('name', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "name",
             key: "name"
         },
         {
-            title: t("INN"),
+            title: (
+                <Space direction="vertical">
+                    {t("INN")}
+                    <Input
+                        allowClear
+                        placeholder={t("INN")}
+                        value={get(params,'inn','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('inn', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "inn",
             key: "inn"
         },
@@ -67,17 +98,56 @@ const PharmaciesContainer = () => {
             key: "status"
         },
         {
-            title: t("District"),
+            title: (
+                <Space direction="vertical">
+                    {t("District")}
+                    <Input
+                        allowClear
+                        placeholder={t("District")}
+                        value={get(params,'districtName','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('districtName', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "districtName",
             key: "districtName"
         },
         {
-            title: t("Created by"),
+            title: (
+                <Space direction="vertical">
+                    {t("Created by")}
+                    <Input
+                        allowClear
+                        placeholder={t("Created by")}
+                        value={get(params,'createdBy','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('createdBy', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "createdBy",
             key: "createdBy"
         },
         {
-            title: t("Created at"),
+            title: (
+                <Space direction="vertical">
+                    {t("Created at")}
+                    <DatePicker
+                        allowClear
+                        showTime
+                        format="YYYY-MM-DDTHH:mm:ss"
+                        value={get(params, 'from') ? dayjs(get(params, 'from')) : null}
+                        onChange={(date, dateString) => {
+                            onChange('from', dateString);
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "createdAt",
             key: "createdAt",
             render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),

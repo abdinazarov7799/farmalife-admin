@@ -142,7 +142,20 @@ const DoctorsContainer = () => {
             key: "position"
         },
         {
-            title: t("Created by"),
+            title: (
+                <Space direction="vertical">
+                    {t("Created by")}
+                    <Input
+                        allowClear
+                        placeholder={t("Created by")}
+                        value={get(params,'createdBy','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('createdBy', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "createdBy",
             key: "createdBy"
         },

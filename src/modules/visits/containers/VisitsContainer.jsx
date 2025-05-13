@@ -134,7 +134,20 @@ const VisitsContainer = () => {
             key: "medInstitutionName"
         },
         {
-            title: t("Visited by"),
+            title: (
+                <Space direction="vertical">
+                    {t("Visited by")}
+                    <Input
+                        allowClear
+                        placeholder={t("Visited by")}
+                        value={get(params,'visitedBy','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('visitedBy', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "visitedBy",
             key: "visitedBy"
         },
@@ -144,24 +157,6 @@ const VisitsContainer = () => {
             key: "position"
         },
         {
-            // title: (
-            //     <Space direction="vertical">
-            //         {t("Created at")}
-            //         <RangePicker
-            //             showTime // <-- Mana shu qo'shiladi
-            //             format="YYYY-MM-DDTHH:mm:ss" // <-- Mana to'g'ri format
-            //             value={[
-            //                 get(params, 'from') ? dayjs(get(params, 'from')) : null,
-            //                 get(params, 'to') ? dayjs(get(params, 'to')) : null
-            //             ]}
-            //             onChange={(dates, dateStrings) => {
-            //                 const [from, to] = dateStrings;
-            //                 onChange('from', from);
-            //                 onChange('to', to);
-            //             }}
-            //         />
-            //     </Space>
-            // ),
             title: (
                 <Space direction="vertical">
                     {t("Created at")}
@@ -200,28 +195,6 @@ const VisitsContainer = () => {
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
-                {/*<Space size={"middle"}>*/}
-                {/*    <Input.Search*/}
-                {/*        placeholder={t("Search")}*/}
-                {/*        onChange={(e) => setSearchKey(e.target.value)}*/}
-                {/*        allowClear*/}
-                {/*    />*/}
-
-                {/*    <Select*/}
-                {/*        allowClear*/}
-                {/*        loading={isLoadingUsers}*/}
-                {/*        options={get(users,'data.content',[])?.map(user => ({*/}
-                {/*            label: `${get(user,'firstName')} ${get(user,'lastName')}`,*/}
-                {/*            value: get(user,'id'),*/}
-                {/*        }))}*/}
-                {/*        style={{width: 300}}*/}
-                {/*        placeholder={t("User")}*/}
-                {/*        onClear={() => setUserId(null)}*/}
-                {/*        onSelect={(value) => setUserId(value)}*/}
-                {/*        showSearch*/}
-                {/*    />*/}
-                {/*</Space>*/}
-
                 <Table
                     columns={columns}
                     dataSource={get(data,'data.content',[])}

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {Button, DatePicker, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
@@ -17,6 +17,7 @@ const MedInstitutionsContainer = () => {
     const [page, setPage] = useState(0);
     const [searchKey,setSearchKey] = useState();
     const [selected, setSelected] = useState(null);
+    const [params, setParams] = useState({});
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.med_institutions_list,
@@ -24,7 +25,8 @@ const MedInstitutionsContainer = () => {
         params: {
             params: {
                 size: 10,
-                search: searchKey
+                search: searchKey,
+                ...params
             }
         },
         page
@@ -45,6 +47,10 @@ const MedInstitutionsContainer = () => {
         mutate({url: `${URLS.med_institutions_delete}/${id}`})
     }
 
+    const onChange = (name,value) => {
+        setParams(prevState => ({...prevState, [name]: value}))
+    }
+
     const columns = [
         {
             title: t("ID"),
@@ -52,7 +58,20 @@ const MedInstitutionsContainer = () => {
             key: "id",
         },
         {
-            title: t("Name"),
+            title: (
+                <Space direction="vertical">
+                    {t("Name")}
+                    <Input
+                        allowClear
+                        placeholder={t("Name")}
+                        value={get(params,'name','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('name', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "name",
             key: "name"
         },
@@ -62,17 +81,56 @@ const MedInstitutionsContainer = () => {
             key: "status"
         },
         {
-            title: t("District name"),
+            title: (
+                <Space direction="vertical">
+                    {t("District name")}
+                    <Input
+                        allowClear
+                        placeholder={t("District name")}
+                        value={get(params,'districtName','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('districtName', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "districtName",
             key: "districtName"
         },
         {
-            title: t("Created by"),
+            title: (
+                <Space direction="vertical">
+                    {t("Created by")}
+                    <Input
+                        allowClear
+                        placeholder={t("Created by")}
+                        value={get(params,'createdBy','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('createdBy', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "createdBy",
             key: "createdBy"
         },
         {
-            title: t("Created at"),
+            title: (
+                <Space direction="vertical">
+                    {t("Created at")}
+                    <DatePicker
+                        allowClear
+                        showTime
+                        format="YYYY-MM-DDTHH:mm:ss"
+                        value={get(params, 'from') ? dayjs(get(params, 'from')) : null}
+                        onChange={(date, dateString) => {
+                            onChange('from', dateString);
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "createdAt",
             key: "createdAt",
             render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
