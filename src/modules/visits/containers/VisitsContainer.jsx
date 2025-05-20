@@ -1,21 +1,22 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, DatePicker, Input, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {Button, DatePicker, Input, message, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import dayjs from "dayjs";
-import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
-import {DeleteOutlined} from "@ant-design/icons";
-const { RangePicker } = DatePicker;
+import {DeleteOutlined, FileExcelOutlined} from "@ant-design/icons";
+import {request} from "../../../services/api/index.js";
+import {saveAs} from "file-saver";
 
 const VisitsContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
     const [params, setParams] = useState({});
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.visit_list,
@@ -28,16 +29,6 @@ const VisitsContainer = () => {
         },
         page
     });
-    //
-    // const {data:users,isLoading:isLoadingUsers} = useGetAllQuery({
-    //     key: KEYS.users_list,
-    //     url: URLS.users_list,
-    //     params: {
-    //         params: {
-    //             size: 1000,
-    //         }
-    //     }
-    // })
 
     const { mutate } = useDeleteQuery({
         listKeyId: KEYS.visit_list
@@ -48,6 +39,18 @@ const VisitsContainer = () => {
 
     const onChange = (name,value) => {
         setParams(prevState => ({...prevState, [name]: value}))
+    }
+
+    const getExcel = async () => {
+        try {
+            const response = await request.get("/api/admin/visits/export",{responseType: "blob"});
+            const blob = new Blob([get(response,'data')]);
+            saveAs(blob, `Visits ${dayjs().format("YYYY-MM-DD")}.xlsx`)
+        }catch (error) {
+            message.error(t("Fayl shakllantirishda xatolik"))
+        }finally {
+            setIsDownloading(false);
+        }
     }
 
     const columns = [
@@ -195,6 +198,14 @@ const VisitsContainer = () => {
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
+                <Row justify={'end'}>
+                    <Button icon={<FileExcelOutlined/>} type="primary" onClick={() => {
+                        setIsDownloading(true);
+                        getExcel()
+                    }} loading={isDownloading} >
+                        {t("Excelни олиш")}
+                    </Button>
+                </Row>
                 <Table
                     columns={columns}
                     dataSource={get(data,'data.content',[])}

@@ -1,15 +1,29 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Select, Space, Table, Typography} from "antd";
+import {
+    Button,
+    Image,
+    Input,
+    message,
+    Modal,
+    Pagination,
+    Popconfirm,
+    Row,
+    Select,
+    Space,
+    Table,
+    Typography
+} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
-import {DeleteOutlined, EyeOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EyeOutlined, FileExcelOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
+import {request} from "../../../services/api/index.js";
 
 const StocksContainer = () => {
     const {t} = useTranslation();
@@ -18,6 +32,7 @@ const StocksContainer = () => {
     const [searchKey,setSearchKey] = useState();
     const [selected, setSelected] = useState(null);
     const [userId, setUserId] = useState(null);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.stocks_list,
@@ -48,6 +63,18 @@ const StocksContainer = () => {
             }
         }
     })
+
+    const getExcel = async () => {
+        try {
+            const response = await request.get("/api/admin/stocks/export",{responseType: "blob"});
+            const blob = new Blob([get(response,'data')]);
+            saveAs(blob, `Stocks ${dayjs().format("YYYY-MM-DD")}.xlsx`)
+        }catch (error) {
+            message.error(t("Fayl shakllantirishda xatolik"))
+        }finally {
+            setIsDownloading(false);
+        }
+    }
 
     const { mutate } = useDeleteQuery({
         listKeyId: KEYS.stocks_list
@@ -141,26 +168,35 @@ const StocksContainer = () => {
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
-                <Space size={"middle"}>
-                    <Input.Search
-                        placeholder={t("Search")}
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        allowClear
-                    />
-                    <Select
-                        allowClear
-                        loading={isLoadingUsers}
-                        options={get(users,'data.content',[])?.map(user => ({
-                            label: `${get(user,'firstname')} ${get(user,'lastName')}`,
-                            value: get(user,'id'),
-                        }))}
-                        style={{width: 300}}
-                        placeholder={t("User")}
-                        onClear={() => setUserId(null)}
-                        onSelect={(value) => setUserId(value)}
-                        showSearch
-                    />
-                </Space>
+                <Row justify={'space-between'}>
+                    <Space size={"middle"}>
+                        <Input.Search
+                            placeholder={t("Search")}
+                            onChange={(e) => setSearchKey(e.target.value)}
+                            allowClear
+                        />
+                        <Select
+                            allowClear
+                            loading={isLoadingUsers}
+                            options={get(users,'data.content',[])?.map(user => ({
+                                label: `${get(user,'firstname')} ${get(user,'lastName')}`,
+                                value: get(user,'id'),
+                            }))}
+                            style={{width: 300}}
+                            placeholder={t("User")}
+                            onClear={() => setUserId(null)}
+                            onSelect={(value) => setUserId(value)}
+                            showSearch
+                        />
+                    </Space>
+                    <Button icon={<FileExcelOutlined/>} type="primary" onClick={() => {
+                        setIsDownloading(true);
+                        getExcel()
+                    }} loading={isDownloading} >
+                        {t("Excelни олиш")}
+                    </Button>
+                </Row>
+
 
                 <Table
                     columns={columns}

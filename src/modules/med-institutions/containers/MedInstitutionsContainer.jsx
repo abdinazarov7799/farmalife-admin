@@ -1,16 +1,37 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, DatePicker, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {
+    Button,
+    DatePicker,
+    Image,
+    Input,
+    message,
+    Modal,
+    Pagination,
+    Popconfirm,
+    Row,
+    Space,
+    Table,
+    Typography
+} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import usePatchQuery from "../../../hooks/api/usePatchQuery.js";
-import {CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
+import {
+    CheckOutlined,
+    CloseOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    EyeOutlined,
+    FileExcelOutlined
+} from "@ant-design/icons";
 import dayjs from "dayjs";
 import EditMed from "../components/EditMed.jsx";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
+import {request} from "../../../services/api/index.js";
 
 const MedInstitutionsContainer = () => {
     const {t} = useTranslation();
@@ -18,6 +39,7 @@ const MedInstitutionsContainer = () => {
     const [searchKey,setSearchKey] = useState();
     const [selected, setSelected] = useState(null);
     const [params, setParams] = useState({});
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.med_institutions_list,
@@ -49,6 +71,18 @@ const MedInstitutionsContainer = () => {
 
     const onChange = (name,value) => {
         setParams(prevState => ({...prevState, [name]: value}))
+    }
+
+    const getExcel = async () => {
+        try {
+            const response = await request.get("/api/admin/med-institutions/export",{responseType: "blob"});
+            const blob = new Blob([get(response,'data')]);
+            saveAs(blob, `Med institutions ${dayjs().format("YYYY-MM-DD")}.xlsx`)
+        }catch (error) {
+            message.error(t("Fayl shakllantirishda xatolik"))
+        }finally {
+            setIsDownloading(false);
+        }
     }
 
     const columns = [
@@ -212,13 +246,21 @@ const MedInstitutionsContainer = () => {
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
-                <Space size={"middle"}>
-                    <Input.Search
-                        placeholder={t("Search")}
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        allowClear
-                    />
-                </Space>
+                <Row justify={'space-between'}>
+                    <Space size={"middle"}>
+                        <Input.Search
+                            placeholder={t("Search")}
+                            onChange={(e) => setSearchKey(e.target.value)}
+                            allowClear
+                        />
+                    </Space>
+                    <Button icon={<FileExcelOutlined/>} type="primary" onClick={() => {
+                        setIsDownloading(true);
+                        getExcel()
+                    }} loading={isDownloading} >
+                        {t("Excelни олиш")}
+                    </Button>
+                </Row>
 
                 <Table
                     columns={columns}
