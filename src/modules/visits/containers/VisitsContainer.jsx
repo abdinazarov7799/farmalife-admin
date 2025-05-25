@@ -55,11 +55,6 @@ const VisitsContainer = () => {
 
     const columns = [
         {
-            title: t("ID"),
-            dataIndex: "id",
-            key: "id",
-        },
-        {
             title: (
                 <Space direction="vertical">
                     {t("FIO")}
@@ -94,11 +89,6 @@ const VisitsContainer = () => {
             ),
             dataIndex: "phone",
             key: "phone"
-        },
-        {
-            title: t("Second place of work"),
-            dataIndex: "secondPlaceOfWork",
-            key: "secondPlaceOfWork"
         },
         {
             title: (
@@ -153,11 +143,6 @@ const VisitsContainer = () => {
             ),
             dataIndex: "visitedBy",
             key: "visitedBy"
-        },
-        {
-            title: t("Position"),
-            dataIndex: "position",
-            key: "position"
         },
         {
             title: (

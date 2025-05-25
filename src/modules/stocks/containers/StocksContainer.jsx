@@ -85,11 +85,6 @@ const StocksContainer = () => {
 
     const columns = [
         {
-            title: t("ID"),
-            dataIndex: "id",
-            key: "id",
-        },
-        {
             title: t("Status"),
             dataIndex: "status",
             key: "status",
@@ -181,6 +176,7 @@ const StocksContainer = () => {
                             options={get(users,'data.content',[])?.map(user => ({
                                 label: `${get(user,'firstname')} ${get(user,'lastName')}`,
                                 value: get(user,'id'),
+                                disabled: get(user,'blocked')
                             }))}
                             style={{width: 300}}
                             placeholder={t("User")}
