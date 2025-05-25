@@ -7,10 +7,8 @@ import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import dayjs from "dayjs";
-import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 import {DeleteOutlined} from "@ant-design/icons";
-const { RangePicker } = DatePicker;
 
 const VisitsContainer = () => {
     const {t} = useTranslation();
@@ -52,11 +50,6 @@ const VisitsContainer = () => {
 
     const columns = [
         {
-            title: t("ID"),
-            dataIndex: "id",
-            key: "id",
-        },
-        {
             title: (
                 <Space direction="vertical">
                     {t("FIO")}
@@ -91,11 +84,6 @@ const VisitsContainer = () => {
             ),
             dataIndex: "phone",
             key: "phone"
-        },
-        {
-            title: t("Second place of work"),
-            dataIndex: "secondPlaceOfWork",
-            key: "secondPlaceOfWork"
         },
         {
             title: (
@@ -150,11 +138,6 @@ const VisitsContainer = () => {
             ),
             dataIndex: "visitedBy",
             key: "visitedBy"
-        },
-        {
-            title: t("Position"),
-            dataIndex: "position",
-            key: "position"
         },
         {
             title: (

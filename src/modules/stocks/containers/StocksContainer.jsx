@@ -35,8 +35,8 @@ const StocksContainer = () => {
     const {data:details,isLoading:isLoadingDetails} = usePaginateQuery({
         key: `${KEYS.stock_details}/${get(selected,'id')}`,
         url: `${URLS.stock_details}/${get(selected,'id')}`,
-        enabled: !!get(selected,'id'),
-        page: detailsPage
+        enabled: !!selected,
+        page: detailsPage,
     })
 
     const {data:users,isLoading:isLoadingUsers} = useGetAllQuery({
@@ -57,11 +57,6 @@ const StocksContainer = () => {
     }
 
     const columns = [
-        {
-            title: t("ID"),
-            dataIndex: "id",
-            key: "id",
-        },
         {
             title: t("Status"),
             dataIndex: "status",
@@ -153,6 +148,7 @@ const StocksContainer = () => {
                         options={get(users,'data.content',[])?.map(user => ({
                             label: `${get(user,'firstname')} ${get(user,'lastName')}`,
                             value: get(user,'id'),
+                            disabled: get(user,'blocked')
                         }))}
                         style={{width: 300}}
                         placeholder={t("User")}
