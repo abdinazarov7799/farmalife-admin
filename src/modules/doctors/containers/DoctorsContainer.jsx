@@ -1,21 +1,23 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, DatePicker, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {Button, DatePicker, Input, message, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import dayjs from "dayjs";
-import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, FileExcelOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 import EditDoctor from "../components/EditDoctor.jsx";
+import {request} from "../../../services/api/index.js";
 
 const DoctorsContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
     const [params, setParams] = useState({});
     const [selected, setSelected] = useState(null);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.doctors_list,
@@ -38,6 +40,18 @@ const DoctorsContainer = () => {
 
     const onChange = (name,value) => {
         setParams(prevState => ({...prevState, [name]: value}))
+    }
+
+    const getExcel = async () => {
+        try {
+            const response = await request.get("/api/admin/doctors/export",{responseType: "blob"});
+            const blob = new Blob([get(response,'data')]);
+            saveAs(blob, `Doctors ${dayjs().format("YYYY-MM-DD")}.xlsx`)
+        }catch (error) {
+            message.error(t("Fayl shakllantirishda xatolik"))
+        }finally {
+            setIsDownloading(false);
+        }
     }
 
     const columns = [
@@ -212,13 +226,14 @@ const DoctorsContainer = () => {
                 <EditDoctor setSelected={setSelected} selected={selected} />
             </Modal>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
-                {/*<Space size={"middle"}>*/}
-                {/*    <Input.Search*/}
-                {/*        placeholder={t("Search")}*/}
-                {/*        onChange={(e) => setSearchKey(e.target.value)}*/}
-                {/*        allowClear*/}
-                {/*    />*/}
-                {/*</Space>*/}
+                <Row justify={'end'}>
+                    <Button icon={<FileExcelOutlined/>} type="primary" onClick={() => {
+                        setIsDownloading(true);
+                        getExcel()
+                    }} loading={isDownloading} >
+                        {t("Excelни олиш")}
+                    </Button>
+                </Row>
 
                 <Table
                     columns={columns}
