@@ -204,20 +204,6 @@ const StocksContainer = () => {
                             onChange={(e) => setSearchKey(e.target.value)}
                             allowClear
                         />
-                        <Select
-                            allowClear
-                            loading={isLoadingUsers}
-                            options={get(users,'data.content',[])?.map(user => ({
-                                label: `${get(user,'firstname')} ${get(user,'lastName')}`,
-                                value: get(user,'id'),
-                                disabled: get(user,'blocked')
-                            }))}
-                            style={{width: 300}}
-                            placeholder={t("User")}
-                            onClear={() => setUserId(null)}
-                            onSelect={(value) => setUserId(value)}
-                            showSearch
-                        />
                         <DatePicker
                             allowClear
                             placeholder={t("Dan")}
