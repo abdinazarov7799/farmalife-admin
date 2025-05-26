@@ -48,7 +48,9 @@ const MedInstitutionsContainer = () => {
             params: {
                 size: 10,
                 search: searchKey,
-                ...params
+                ...params,
+                from: get(params,'from') ? get(params,'from')?.toISOString() : null,
+                to: get(params,'to') ? get(params,'to')?.toISOString() : null
             }
         },
         page
@@ -151,20 +153,7 @@ const MedInstitutionsContainer = () => {
             key: "createdBy"
         },
         {
-            title: (
-                <Space direction="vertical">
-                    {t("Created at")}
-                    <DatePicker
-                        allowClear
-                        showTime
-                        format="YYYY-MM-DDTHH:mm:ss"
-                        value={get(params, 'from') ? dayjs(get(params, 'from')) : null}
-                        onChange={(date, dateString) => {
-                            onChange('from', dateString);
-                        }}
-                    />
-                </Space>
-            ),
+            title: t("Created at"),
             dataIndex: "createdAt",
             key: "createdAt",
             render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
@@ -247,11 +236,25 @@ const MedInstitutionsContainer = () => {
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
                 <Row justify={'space-between'}>
-                    <Space size={"middle"}>
+                    <Space>
                         <Input.Search
                             placeholder={t("Search")}
                             onChange={(e) => setSearchKey(e.target.value)}
                             allowClear
+                        />
+                        <DatePicker
+                            allowClear
+                            placeholder={t("Dan")}
+                            format="YYYY-MM-DD"
+                            value={get(params, 'from') ? dayjs(get(params, 'from')) : null}
+                            onChange={(date) => onChange('from', date)}
+                        />
+                        <DatePicker
+                            allowClear
+                            placeholder={t("Gacha")}
+                            format="YYYY-MM-DD"
+                            value={get(params, 'to') ? dayjs(get(params, 'to')) : null}
+                            onChange={(date) => onChange('to', date)}
                         />
                     </Space>
                     <Button icon={<FileExcelOutlined/>} type="primary" onClick={() => {

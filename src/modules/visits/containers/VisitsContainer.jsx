@@ -25,6 +25,8 @@ const VisitsContainer = () => {
             params: {
                 size: 10,
                 ...params,
+                from: get(params,'from') ? get(params,'from')?.toISOString() : null,
+                to: get(params,'to') ? get(params,'to')?.toISOString() : null
             }
         },
         page
@@ -145,20 +147,7 @@ const VisitsContainer = () => {
             key: "visitedBy"
         },
         {
-            title: (
-                <Space direction="vertical">
-                    {t("Created at")}
-                    <DatePicker
-                        allowClear
-                        showTime
-                        format="YYYY-MM-DDTHH:mm:ss"
-                        value={get(params, 'from') ? dayjs(get(params, 'from')) : null}
-                        onChange={(date, dateString) => {
-                            onChange('from', dateString);
-                        }}
-                    />
-                </Space>
-            ),
+            title: t("Created at"),
             dataIndex: "createdAt",
             key: "createdAt",
             render: (props) => dayjs(props).format("YYYY-MM-DD HH:mm:ss"),
@@ -183,7 +172,23 @@ const VisitsContainer = () => {
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
-                <Row justify={'end'}>
+                <Row justify={'space-between'}>
+                    <Space>
+                        <DatePicker
+                            allowClear
+                            placeholder={t("Dan")}
+                            format="YYYY-MM-DD"
+                            value={get(params, 'from') ? dayjs(get(params, 'from')) : null}
+                            onChange={(date) => onChange('from', date)}
+                        />
+                        <DatePicker
+                            allowClear
+                            placeholder={t("Gacha")}
+                            format="YYYY-MM-DD"
+                            value={get(params, 'to') ? dayjs(get(params, 'to')) : null}
+                            onChange={(date) => onChange('to', date)}
+                        />
+                    </Space>
                     <Button icon={<FileExcelOutlined/>} type="primary" onClick={() => {
                         setIsDownloading(true);
                         getExcel()
