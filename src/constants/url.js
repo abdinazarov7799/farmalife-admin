@@ -39,7 +39,7 @@ export const URLS = {
     doctors_list: '/api/admin/doctors/filter',
     doctor_delete: '/api/admin/doctors/delete',
     doctor_edit: '/api/admin/doctors/edit',
-    stocks_list: '/api/admin/stocks/get',
+    stocks_list: '/api/admin/stocks/filter',
     stock_details: '/api/admin/stocks/get-details',
     stocks_delete: '/api/admin/stocks/delete'
 };

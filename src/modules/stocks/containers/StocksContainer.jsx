@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
 import {
-    Button,
+    Button, DatePicker,
     Image,
     Input,
     message,
@@ -33,6 +33,7 @@ const StocksContainer = () => {
     const [selected, setSelected] = useState(null);
     const [userId, setUserId] = useState(null);
     const [isDownloading, setIsDownloading] = useState(false);
+    const [params, setParams] = useState({});
 
     const {data,isLoading} = usePaginateQuery({
         key: KEYS.stocks_list,
@@ -41,7 +42,10 @@ const StocksContainer = () => {
             params: {
                 size: 10,
                 search: searchKey,
-                userId
+                userId,
+                ...params,
+                from: get(params,'from') ? get(params,'from')?.toISOString() : null,
+                to: get(params,'to') ? get(params,'to')?.toISOString() : null
             }
         },
         page
@@ -63,6 +67,10 @@ const StocksContainer = () => {
             }
         }
     })
+
+    const onChange = (name,value) => {
+        setParams(prevState => ({...prevState, [name]: value}))
+    }
 
     const getExcel = async () => {
         try {
@@ -90,7 +98,20 @@ const StocksContainer = () => {
             key: "status",
         },
         {
-            title: t("User"),
+            title: (
+                <Space direction="vertical">
+                    {t("User")}
+                    <Input
+                        placeholder={t("User")}
+                        allowClear
+                        value={get(params,'user','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('user', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "userData",
             key: "userData"
         },
@@ -111,7 +132,20 @@ const StocksContainer = () => {
             )
         },
         {
-            title: t("Pharmacy"),
+            title: (
+                <Space direction="vertical">
+                    {t("Pharmacy")}
+                    <Input
+                        placeholder={t("Pharmacy")}
+                        allowClear
+                        value={get(params,'pharmacy','')}
+                        onChange={(e) => {
+                            const value = get(e,'target.value');
+                            onChange('pharmacy', value)
+                        }}
+                    />
+                </Space>
+            ),
             dataIndex: "pharmacy",
             key: "pharmacy"
         },
@@ -183,6 +217,20 @@ const StocksContainer = () => {
                             onClear={() => setUserId(null)}
                             onSelect={(value) => setUserId(value)}
                             showSearch
+                        />
+                        <DatePicker
+                            allowClear
+                            placeholder={t("Dan")}
+                            format="YYYY-MM-DD"
+                            value={get(params, 'from') ? dayjs(get(params, 'from')) : null}
+                            onChange={(date) => onChange('from', date)}
+                        />
+                        <DatePicker
+                            allowClear
+                            placeholder={t("Gacha")}
+                            format="YYYY-MM-DD"
+                            value={get(params, 'to') ? dayjs(get(params, 'to')) : null}
+                            onChange={(date) => onChange('to', date)}
                         />
                     </Space>
                     <Button icon={<FileExcelOutlined/>} type="primary" onClick={() => {
