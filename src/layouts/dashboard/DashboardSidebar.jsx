@@ -55,6 +55,11 @@ const DashboardSidebar = () => {
             access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_AREA_ADMIN],
         },
         {
+            label: t("Specializations"),
+            key: "/specializations",
+            access: [config.ROLES.ROLE_SUPER_ADMIN],
+        },
+        {
             label: t("Users"),
             key: "/users",
             access: [config.ROLES.ROLE_SUPER_ADMIN,config.ROLES.ROLE_AREA_ADMIN],

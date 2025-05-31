@@ -13,5 +13,6 @@ export const KEYS = {
     med_institutions_list: "med_institutions_list",
     doctors_list: "doctors_list",
     stocks_list: "stocks_list",
-    stock_details: "stock_details"
+    stock_details: "stock_details",
+    specializations_list: "specializations_list"
 };

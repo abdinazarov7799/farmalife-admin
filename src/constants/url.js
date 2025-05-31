@@ -41,5 +41,9 @@ export const URLS = {
     doctor_edit: '/api/admin/doctors/edit',
     stocks_list: '/api/admin/stocks/filter',
     stock_details: '/api/admin/stocks/get-details',
-    stocks_delete: '/api/admin/stocks/delete'
+    stocks_delete: '/api/admin/stocks/delete',
+    specializations_list: '/api/admin/specializations',
+    specializations_add: '/api/admin/specializations/add',
+    specializations_edit: '/api/admin/specializations/edit',
+    specializations_delete: '/api/admin/specializations/delete',
 };

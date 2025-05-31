@@ -30,6 +30,7 @@ import VisitsPage from "../modules/visits/pages/VisitsPage.jsx";
 import MedInstitutionsPage from "../modules/med-institutions/pages/MedInstitutionsPage.jsx";
 import StocksPage from "../modules/stocks/pages/StocksPage.jsx";
 import DoctorsPage from "../modules/doctors/pages/DoctorsPage.jsx";
+import SpecializationsPage from "../modules/specializations/pages/SpecializationsPage.jsx";
 // PAGES
 
 
@@ -52,6 +53,7 @@ const Router = () => {
               <Route path={"/pharmacies"} element={<PharmaciesPage />}/>
               <Route path={"/translations"} element={<TranslationPage />}/>
               <Route path={"/constants"} element={<ConstantsPage />}/>
+              <Route path={"/specializations"} element={<SpecializationsPage />}/>
               <Route path={"auth/*"} element={<Navigate to={"/users"} replace />}/>
               <Route path={"/"} element={<Navigate to={"/users"} replace />}/>
               <Route path={"*"} element={<NotFoundPage />} />
